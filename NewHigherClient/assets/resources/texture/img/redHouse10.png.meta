@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "b4b62e2d-4b7e-47ce-aad3-b82eba3a88bc",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "redHouse10": {
+      "ver": "1.0.3",
+      "uuid": "4d6def53-0e84-48bd-8d1f-b83967a3a6b9",
+      "rawTextureUuid": "b4b62e2d-4b7e-47ce-aad3-b82eba3a88bc",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 120,
+      "height": 120,
+      "rawWidth": 120,
+      "rawHeight": 120,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

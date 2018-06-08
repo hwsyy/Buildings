@@ -1,0 +1,13 @@
+{
+    "m_iHeight": 120,
+    "m_iWidth": 120,
+    "m_iDownedBrickLeftmax": 2,
+    "m_iDownedBrickFrequency": 0.02,
+    "m_iDownedBrickBasePointX": 667.0,
+    "m_iDownedBrickBasePointY": 0.0,
+    "m_iNeedUpdateBrickNUM": 4,
+    "m_iDownSpeedX": 0.004,
+    "m_iDownSpeedY": 0.20,
+    "m_iFallSpeedX": 0.1,
+    "m_iFallSpeedY": 0.1
+}

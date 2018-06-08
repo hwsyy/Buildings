@@ -1,0 +1,15 @@
+info face="Arial" size=200 bold=0 italic=0 charset="" unicode=1 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=0,0 outline=0
+common lineHeight=198 base=160 scaleW=600 scaleH=600 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0
+page id=0 file="orange_num_0.png"
+chars count=11
+char id=43   x=106   y=0     width=105   height=140   xoffset=0     yoffset=0     xadvance=105   page=0  chnl=15
+char id=48   x=211   y=0     width=104   height=140   xoffset=0     yoffset=0     xadvance=104   page=0  chnl=15
+char id=49   x=515   y=0     width=59    height=137   xoffset=0     yoffset=0     xadvance=59    page=0  chnl=15
+char id=50   x=195   y=140   width=96    height=140   xoffset=0     yoffset=0     xadvance=96    page=0  chnl=15
+char id=51   x=98    y=140   width=97    height=140   xoffset=0     yoffset=0     xadvance=97    page=0  chnl=15
+char id=52   x=0     y=0     width=106   height=140   xoffset=0     yoffset=0     xadvance=106   page=0  chnl=15
+char id=53   x=291   y=140   width=96    height=138   xoffset=0     yoffset=0     xadvance=96    page=0  chnl=15
+char id=54   x=315   y=0     width=100   height=140   xoffset=0     yoffset=0     xadvance=100   page=0  chnl=15
+char id=55   x=387   y=140   width=101   height=137   xoffset=0     yoffset=0     xadvance=101   page=0  chnl=15
+char id=56   x=0     y=140   width=98    height=140   xoffset=0     yoffset=0     xadvance=98    page=0  chnl=15
+char id=57   x=415   y=0     width=100   height=140   xoffset=0     yoffset=0     xadvance=100   page=0  chnl=15
