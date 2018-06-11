@@ -30,11 +30,12 @@ export class ConfigData
     public static CAMERA_MOVE_SPEED: number = 3;
 
     /**摄像机移动次数 */
-    public static CAMERA_MOVE_COUNT: number = 35;
+    public static CAMERA_MOVE_COUNT: number = 40;
 
     /**最大背景图索引 */
     public static MAX_BG_INDEX: number = 6;
 
     /**摄像机高度 */
+    // public static CAMERA_HEIGHT: number = cc.view.getVisibleSize().height;
     public static CAMERA_HEIGHT: number = 1280;
 }

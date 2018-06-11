@@ -141,7 +141,9 @@ export class BattleManager
     private update(dt: number)
     {
         this.hook.update(dt);
-        this.brick.update();
+        let pos: cc.Vec2 = this.hook.hook.convertToWorldSpaceAR(this.hook.hook.position);
+        // console.log(">>>>s",pos);
+
         if(this.isMoveCamera == true)//镜头移动
         {
             if(this.cameraMoveCount < ConfigData.CAMERA_MOVE_COUNT)
@@ -154,6 +156,9 @@ export class BattleManager
             {
                 this.moveCameraEnd();
             }
+            console.log("cameraCavas.y = ",this.cameraCanvas.y);
         }
+        let pos2: cc.Vec2 = cc.p(pos.x / 2,pos.y / 2 - this.cameraCanvas.y);
+        this.brick.update(pos2);
     }
 }

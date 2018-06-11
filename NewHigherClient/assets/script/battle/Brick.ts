@@ -22,7 +22,7 @@ export class Brick
     /**砖块列表 */
     private brickList: Array<BrickCell>;
     /**是否下落中 */
-    private isFalling: boolean;
+    public isFalling: boolean;
     /**当前的砖块 */
     private currentBrick: BrickCell;
     /**当前下落到高度*/
@@ -64,7 +64,7 @@ export class Brick
     {
         this.isFalling = false;
         this.currentFallY = ConfigData.INIT_FLOOR_Y;
-        this.addBrick(0,300);
+        this.addBrick(0,-300);
     }
 
     /**
@@ -81,7 +81,7 @@ export class Brick
     /**
      * 帧刷新
      */
-    public update(): void
+    public update(pos: cc.Vec2): void
     {
         if(this.isFalling == true)
         {
@@ -89,13 +89,18 @@ export class Brick
             {
                 this.currentBrick.update(0,this.currentFallY,this.endFall.bind(this));
             }
+        } else
+        {
+
+            this.currentBrick.setPosition(pos.x,pos.y);
+
         }
     }
 
     /**
      * 添加砖块
      */
-    private addBrick(_x: number,_y: number): void
+    public addBrick(_x: number,_y: number): void
     {
         let index: number = Math.floor(Math.random() * this.brickResList.length);
         this.currentBrick = new BrickCell(this.brickList.length,cc.instantiate(this.brickResList[index]),this.perfectRes);
@@ -128,7 +133,7 @@ export class Brick
         {
             this.isFalling = false;
             this.currentFallY = ConfigData.INIT_FLOOR_Y + (this.brickList.length * ConfigData.BRICK_HEIGHT);
-            this.addBrick(0,300);
+            this.addBrick(0,-300);
         }
         if(this.brickList.length - 1 >= 3)
         {

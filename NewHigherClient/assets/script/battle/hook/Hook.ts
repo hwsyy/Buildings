@@ -20,7 +20,7 @@ export class Hook
     /**绳子 */
     private rope: cc.Node;
     /**钩子 */
-    private hook: cc.Node;
+    public hook: cc.Node;
 
     public m_iQiaoLiangX: number = 360;
     public m_iQiaoLiangY: number = 720;
@@ -33,9 +33,9 @@ export class Hook
     /** 钩子上一帧y坐标 */
     public m_iLastY: number = 0;
     /** 钩子x坐标 */
-    public m_iX: number = 0;//140-580
+    public m_iX: number = 360;//140-580
     /** 钩子y坐标 */
-    public m_iY: number = 0;
+    public m_iY: number = 300;
     /**  */
     public m_iT: number = 0;
     /** 钩子移动速度 */
@@ -132,9 +132,8 @@ export class Hook
         }
         if(this.hook != null)
         {
-
-            this.hook.position = cc.p(this.m_iX - this.m_iQiaoLiangX,this.m_iY - this.m_iQiaoLiangY + 35);
+            this.hook.position = cc.p(this.m_iX - this.m_iQiaoLiangX + 57,this.m_iY - this.m_iQiaoLiangY + 25);
         }
-        console.log(">>>>postion: ",this.rope.position);
+        // console.log(">>>>postion: ",this.rope.position);
     }
 }

@@ -85,10 +85,10 @@ export class BGControl
         if(_direction == CameraRollType.UP)//向上
         {
             this.moveDistance += Math.abs(BattleManager.getInstance().cameraCanvas.y) - Math.abs(this.lastCameraY);
-            console.log("=========移动背景:" + this.moveDistance,this.totalBGHeight,BattleManager.getInstance().cameraCanvas.y);
+            // console.log("=========移动背景:" + this.moveDistance,this.totalBGHeight,BattleManager.getInstance().cameraCanvas.y);
             if(ConfigData.CAMERA_HEIGHT + this.moveDistance >= this.totalBGHeight)//需要加载背景图了
             {
-                console.log("=========加载背景:" + this.loadBgIndex);
+                // console.log("=========加载背景:" + this.loadBgIndex);
                 this.loadBG();
             }
         }
