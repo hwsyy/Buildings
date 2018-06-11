@@ -32,7 +32,9 @@ export class BattleManager
     /**砖块 */
     private brick: Brick;
     /**是否移动镜头 */
-    private isMoveCamera: boolean;
+    public isMoveCamera: boolean;
+    /** 镜头移动方向 */
+    public moveDirection: CameraRollType;
     /**摄像机移动次数 */
     private cameraMoveCount: number;
     /**摄像机移动距离 */
@@ -88,8 +90,8 @@ export class BattleManager
     {
         this.state = GameStateType.GAMING;
         Core.UIMgr.ShowUI("UIBattle");
-        this.bgControl.startGame();
         this.hook.show();
+        this.bgControl.startGame();
         this.brick.startGame();
         this.mainComponent = cc.find("Canvas").getComponent(cc.Canvas);
         this.mainComponent.schedule(this.update.bind(this),0.017,cc.macro.REPEAT_FOREVER);
@@ -112,9 +114,10 @@ export class BattleManager
     /**
      * 移动镜头开始
      */
-    public moveCameraStart(): void
+    public moveCameraStart(direction: CameraRollType): void
     {
         this.isMoveCamera = true;
+        this.moveDirection = direction;
     }
 
     /**
@@ -124,6 +127,7 @@ export class BattleManager
     {
         this.cameraMoveCount = 0;
         this.isMoveCamera = false;
+        this.moveDirection = CameraRollType.NONE;
         this.cameraMoveDist = Math.abs(this.cameraCanvas.y) - this.cameraMoveDist;
     }
 
@@ -132,6 +136,10 @@ export class BattleManager
      */
     public clickStage(): void
     {
+        if(this.brick.isFalling == true || this.isMoveCamera == true)
+        {
+            return;
+        }
         this.brick.putBrick();
     }
 
@@ -140,24 +148,29 @@ export class BattleManager
      */
     private update(dt: number)
     {
-        this.hook.update(dt);
-        let pos: cc.Vec2 = this.hook.hook.convertToWorldSpaceAR(this.hook.hook.position);
-        // console.log(">>>>s",pos);
-
         if(this.isMoveCamera == true)//镜头移动
         {
+            let speed: number = 0;
+            if(this.moveDirection == CameraRollType.UP)
+            {
+                speed = ConfigData.CAMERA_MOVE_SPEED;
+            } else if(this.moveDirection == CameraRollType.DOWN)
+            {
+                speed = - ConfigData.CAMERA_MOVE_SPEED;
+            }
             if(this.cameraMoveCount < ConfigData.CAMERA_MOVE_COUNT)
             {
-                this.cameraCanvas.y -= ConfigData.CAMERA_MOVE_SPEED;
+                this.cameraCanvas.y -= speed;
                 this.cameraMoveCount++;
-                this.bgControl.scrollBack(CameraRollType.UP);//背景滚动
+                this.bgControl.scrollBack(CameraRollType.UP);//背景滚动 
             }
             else
             {
                 this.moveCameraEnd();
             }
-            console.log("cameraCavas.y = ",this.cameraCanvas.y);
         }
+        this.hook.update(dt);
+        let pos: cc.Vec2 = this.hook.hook.convertToWorldSpaceAR(this.hook.hook.position);
         let pos2: cc.Vec2 = cc.p(pos.x / 2,pos.y / 2 - this.cameraCanvas.y);
         this.brick.update(pos2);
     }

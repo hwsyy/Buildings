@@ -3,6 +3,7 @@ import {BattleManager} from "../manager/BattleManager";
 import {ConfigData} from "../common/ConfigData";
 import Core from "../../corelibs/Core";
 import {BrickCell} from "./BrickCell";
+import {CameraRollType} from "../common/GameEnum";
 
 /**
  * 砖块类
@@ -64,7 +65,7 @@ export class Brick
     {
         this.isFalling = false;
         this.currentFallY = ConfigData.INIT_FLOOR_Y;
-        this.addBrick(0,-300);
+        this.addBrick(1000,-300);
     }
 
     /**
@@ -92,7 +93,7 @@ export class Brick
         } else
         {
 
-            this.currentBrick.setPosition(pos.x,pos.y);
+            this.currentBrick.setPosition(pos.x - 200,pos.y - 100);
 
         }
     }
@@ -133,11 +134,11 @@ export class Brick
         {
             this.isFalling = false;
             this.currentFallY = ConfigData.INIT_FLOOR_Y + (this.brickList.length * ConfigData.BRICK_HEIGHT);
-            this.addBrick(0,-300);
+            this.addBrick(1000,0);
         }
         if(this.brickList.length - 1 >= 3)
         {
-            BattleManager.getInstance().moveCameraStart();
+            BattleManager.getInstance().moveCameraStart(CameraRollType.UP);
         }
     }
 }

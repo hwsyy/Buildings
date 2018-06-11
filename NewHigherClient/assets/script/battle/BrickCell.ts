@@ -17,7 +17,7 @@ export class BrickCell
     /**砖块ID 唯一标记 */
     private id: number;
     /**资源 */
-    private res: cc.Node;
+    public res: cc.Node;
     /**完美动画资源 */
     private perfectEffectRes: cc.Node;
     /**父结点 */
@@ -74,20 +74,33 @@ export class BrickCell
      */
     public update(_endX: number,_endY: number,_callBack: Function): void
     {
+        let offset: number = Math.abs(this.res.x - _endX);//掉落的楼层和底部楼层的偏差
         if(this.res.y - ConfigData.BRICK_FALL_SPEED > _endY)
         {
             this.res.y -= ConfigData.BRICK_FALL_SPEED;
         }
         else
         {
-            this.res.y = _endY;
-            if(this.res.x - _endX <= ConfigData.PERFECT_OFFEST_X)
+            if(offset > this.res.width)//没有触碰到楼层跌落
             {
-                _callBack(true);//完美 结束回调
+
+            }
+            else if(offset > this.res.width / 2) //触碰到楼层跌落
+            {
+
             }
             else
             {
-                _callBack(false);//结束回调
+                //盖楼成功
+                this.res.y = _endY;
+                if(this.res.x - _endX <= ConfigData.PERFECT_OFFEST_X)
+                {
+                    _callBack(true);//完美 结束回调
+                }
+                else
+                {
+                    _callBack(false);//结束回调
+                }
             }
         }
     }

@@ -1,6 +1,8 @@
 import {ResStruct} from "../../../corelibs/util/ResourcesMgr";
 import Core from "../../../corelibs/Core";
 import {BattleManager} from "../../manager/BattleManager";
+import {ConfigData} from "../../common/ConfigData";
+import {CameraRollType} from "../../common/GameEnum";
 
 /**
  * 钩子类
@@ -12,7 +14,7 @@ export class Hook
     /**钩子资源 */
     private readonly HOOK_RES: string = "prefabs/Hook";
     /**钩子主资源 */
-    private mainHook: cc.Node;
+    public mainHook: cc.Node;
     /**桥梁 */
     private qiaoLiang: cc.Node;
     /**桥梁下面横块 */
@@ -27,7 +29,7 @@ export class Hook
     /** 钩子初始x坐标 */
     public m_iOriginX: number = 360;
     /** 钩子初始y坐标 */
-    public m_iOriginY: number = 300;
+    public m_iOriginY: number = 400;
     /** 钩子上一帧x坐标 */
     public m_iLastX: number = 0;
     /** 钩子上一帧y坐标 */
@@ -35,7 +37,7 @@ export class Hook
     /** 钩子x坐标 */
     public m_iX: number = 360;//140-580
     /** 钩子y坐标 */
-    public m_iY: number = 300;
+    public m_iY: number = 400;
     /**  */
     public m_iT: number = 0;
     /** 钩子移动速度 */
@@ -76,8 +78,9 @@ export class Hook
     {
         this.mainHook.x = -57;
         this.mainHook.y = 580;
-        // BattleManager.getInstance().cameraCanvas.addChild(this.mainHook);
-        Core.UIRoot.PopUp.addChild(this.mainHook);
+        BattleManager.getInstance().cameraCanvas.addChild(this.mainHook);
+        this.mainHook.setLocalZOrder(1);//0 是背景
+        // Core.UIRoot.PopUp.addChild(this.mainHook);
     }
 
     /**
@@ -108,6 +111,16 @@ export class Hook
      */
     public update(dt: number): void
     {
+        if(BattleManager.getInstance().isMoveCamera == true) 
+        {
+            if(BattleManager.getInstance().moveDirection == CameraRollType.UP)//镜头向上滚动
+            {
+                this.mainHook.y += ConfigData.CAMERA_MOVE_SPEED;
+            } else if(BattleManager.getInstance().moveDirection == CameraRollType.DOWN)//镜头向下滚动
+            {
+                this.mainHook.y -= ConfigData.CAMERA_MOVE_SPEED;
+            }
+        }
         this.m_iLastY = this.m_iY;
         this.m_iT += this.m_iSpeed;
         this.m_iT %= 360;
@@ -134,6 +147,4 @@ export class Hook
         {
             this.hook.position = cc.p(this.m_iX - this.m_iQiaoLiangX + 57,this.m_iY - this.m_iQiaoLiangY + 25);
         }
-        // console.log(">>>>postion: ",this.rope.position);
     }
-}

@@ -94,7 +94,7 @@ export class BGControl
         }
         else//向下
         {
-
+            this.moveDistance -= Math.abs(BattleManager.getInstance().cameraCanvas.y) - Math.abs(this.lastCameraY);
         }
         this.lastCameraY = BattleManager.getInstance().cameraCanvas.y;
     }

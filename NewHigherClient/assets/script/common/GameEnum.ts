@@ -23,6 +23,18 @@ export enum GameEventType
 //摄像机滚动方向
 export enum CameraRollType
 {
+    NONE = "none",
     UP = "up",
     DOWN = "down",
+}
+
+//楼层跌落状态
+export enum BrickFallState
+{
+    PERFECT = "perfect",//人口4
+    GOOD = "good",//人口3
+    NORMAL = "normal",//人口1
+    COLLAPSE = "collapse",//碰撞跌落
+    FALLING = "falling",//自由跌落
+
 }
