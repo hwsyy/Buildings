@@ -90,7 +90,15 @@ export class Brick
         {
             if(this.currentBrick != null)
             {
-                this.currentBrick.update(0,this.currentFallY,this.endFall.bind(this));
+                let _endX: number = 0;
+                if(this.brickList.length >= 2)
+                {
+                    let lastBrick = this.brickList[this.brickList.length - 2];
+                    console.log(">>>>>>>>>>>last: ",lastBrick.res.position);
+                    console.log("<<<<<<<<<<<current: ",this.currentBrick.res.position);
+                    _endX = lastBrick.res.position.x;
+                }
+                this.currentBrick.update(_endX,this.currentFallY,this.endFall.bind(this));
             }
         } else
         {
@@ -155,7 +163,7 @@ export class Brick
                 }
             }
         }
-        console.log(">>>>> bricklist:",this.brickList);
+        // console.log(">>>>> bricklist:",this.brickList);
         PlayerData.floor = this.brickList.length;//减去钩子上挂着的
         Core.EventMgr.Emit(GameEventType.UPDATE_FLOOR,null);
 
