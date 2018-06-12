@@ -10,4 +10,6 @@ export class PlayerData
 
     /**当前人口 */
     public static population: number;
+    /*** 当前生命值（HP） */
+    public static hp_count: number;
 }

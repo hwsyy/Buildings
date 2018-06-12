@@ -1,5 +1,6 @@
 import {ConfigData} from "../common/ConfigData";
 import {BattleManager} from "../manager/BattleManager";
+import {BrickFallState} from "../common/GameEnum";
 
 /**
  * 砖块单元
@@ -74,6 +75,8 @@ export class BrickCell
      */
     public update(_endX: number,_endY: number,_callBack: Function): void
     {
+        // console.log("brick: ",this.res);
+        // console.log("==========screen frame: ",cc.view.getVisibleSize(),cc.view.getFrameSize());
         let offset: number = Math.abs(this.res.x - _endX);//掉落的楼层和底部楼层的偏差
         if(this.res.y - ConfigData.BRICK_FALL_SPEED > _endY)
         {
@@ -81,25 +84,40 @@ export class BrickCell
         }
         else
         {
-            if(offset > this.res.width)//没有触碰到楼层跌落
+            /** 第一次掉落直接返回 */
+            if(this.id == 0)
             {
-
+                _callBack(BrickFallState.NORMAL);
+                return;
             }
-            else if(offset > this.res.width / 2) //触碰到楼层跌落
+            if(offset > ConfigData.BRICK_WIDTH)//没有触碰到楼层跌落
             {
-
+                this.res.y -= ConfigData.BRICK_FALL_SPEED;
+                //离开屏幕后移除并返回状态
+                if(this.res.y - ConfigData.BRICK_FALL_SPEED < -ConfigData.CAMERA_HEIGHT / 2 - 70)
+                {
+                    if(this.parent != null)
+                    {
+                        this.parent.removeChild(this.res);
+                    }
+                    _callBack(BrickFallState.FALLING);
+                }
             }
+            // else if(offset > 35) //触碰到楼层跌落
+            // {
+            //     _callBack(BrickFallState.COLLAPSE);
+            // }
             else
             {
                 //盖楼成功
                 this.res.y = _endY;
                 if(this.res.x - _endX <= ConfigData.PERFECT_OFFEST_X)
                 {
-                    _callBack(true);//完美 结束回调
+                    _callBack(BrickFallState.PERFECT);//完美 结束回调
                 }
                 else
                 {
-                    _callBack(false);//结束回调
+                    _callBack(BrickFallState.NORMAL);//结束回调
                 }
             }
         }

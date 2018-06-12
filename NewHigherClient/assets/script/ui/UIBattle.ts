@@ -13,9 +13,11 @@ import {PlayerData} from "../common/PlayerData";
  */
 export class UIBattle extends BaseUI
 {
-    //HP起始位置信息
+    /** HP起始位置X坐标 */
     private readonly HP_STARTX: number = -300;
+    /** HP起始位置Y坐标 */
     private readonly HP_STARTY: number = -500;
+    /** hp高度 */
     private readonly HP_SPACEY: number = 70;
     /**hp资源 */
     private readonly HP_RES: string = "prefabs/HP";
@@ -51,9 +53,10 @@ export class UIBattle extends BaseUI
                 break;
             }
         }
-
+        //绑定时间
         Core.EventMgr.BindEvent(GameEventType.UPDATE_FLOOR,this.updateFloorHandler,this);
         Core.EventMgr.BindEvent(GameEventType.UPDATE_POPULATION,this.updatePopulationHandler,this);
+        Core.EventMgr.BindEvent(GameEventType.UPDATE_HP,this.updateHPHandler,this);
     }
 
     public Display(): void
@@ -97,5 +100,17 @@ export class UIBattle extends BaseUI
     private updatePopulationHandler(): void
     {
         this.lab_population.string = PlayerData.population + "";
+    }
+    private updateHPHandler(): void
+    {
+        let hp: cc.Node = this.hpList.pop();
+        if(hp.parent != null)
+        {
+            hp.parent.removeChild(hp);
+        }
+        if(this.hpList.length < 1)
+        {
+            BattleManager.getInstance().endGame();
+        }
     }
 }

@@ -18,6 +18,8 @@ export enum GameEventType
     UPDATE_FLOOR,
     /**更新人口 */
     UPDATE_POPULATION,
+    /** 更新生命值(hp) */
+    UPDATE_HP,
 }
 
 //摄像机滚动方向
