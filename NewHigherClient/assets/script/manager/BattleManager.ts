@@ -106,13 +106,12 @@ export class BattleManager
      */
     public endGame(): void
     {
-        // this.state = GameStateType.NOGAMING;
-        // this.mainComponent.unschedule(this.update);
-        // this.hook.hide();
-        // Core.UIMgr.CloseUI("UIBattle");
-        // this.isFirstFall = true;
+        this.state = GameStateType.NOGAMING;
+        this.mainComponent.unschedule(this.update);
+        this.hook.hide();
+        Core.UIMgr.CloseUI("UIBattle");
+        this.bgControl.endGame();
         cc.director.loadScene("InitScene");
-        // Core.UIMgr.ShowUI("UIStart");
     }
 
     /**
@@ -133,6 +132,7 @@ export class BattleManager
         this.isMoveCamera = false;
         this.moveDirection = CameraRollType.NONE;
         this.cameraMoveDist = Math.abs(this.cameraCanvas.y) - this.cameraMoveDist;
+        this.bgControl.isBGLoading = false;
     }
 
     /**

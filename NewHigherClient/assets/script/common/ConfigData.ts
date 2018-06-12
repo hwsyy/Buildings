@@ -18,7 +18,7 @@ export class ConfigData
     public static BRICK_HEIGHT: number = 120;
 
     /**砖块下落速度 */
-    public static BRICK_FALL_SPEED: number = 50;
+    public static BRICK_FALL_SPEED: number = 20;
 
     /**起始地面高度 */
     public static INIT_FLOOR_Y: number = -490;

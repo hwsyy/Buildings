@@ -10,7 +10,7 @@ import {CameraRollType} from "../common/GameEnum";
 export class BGControl
 {
     /**背景同时最大数量 */
-    private readonly BG_COUNT: number = 3;
+    private readonly BG_COUNT: number = 4;
     /**钩子资源 */
     private readonly BG_RES: string = "resources/texture/img/background";
     /**背景列表 三张背景图 上 中 下 */
@@ -27,6 +27,8 @@ export class BGControl
     private totalBGHeight: number;
     /**移动距离 */
     private moveDistance: number;
+    /** 正在加载背景 */
+    public isBGLoading: boolean;
 
     constructor()
     {
@@ -56,10 +58,11 @@ export class BGControl
         this.lastCameraY = 0;
         this.totalBGHeight = 0;
         this.moveDistance = 0;
+        this.isBGLoading = false;
         //开始加载当前屏
         this.loadBG(() =>
         {
-            // this.loadBG(this.bgNodeList[1]);//预加载下一屏地图
+            this.isBGLoading = false;
         });
     }
 
@@ -86,9 +89,9 @@ export class BGControl
         {
             this.moveDistance += Math.abs(BattleManager.getInstance().cameraCanvas.y) - Math.abs(this.lastCameraY);
             // console.log("=========移动背景:" + this.moveDistance,this.totalBGHeight,BattleManager.getInstance().cameraCanvas.y);
-            if(ConfigData.CAMERA_HEIGHT + this.moveDistance >= this.totalBGHeight)//需要加载背景图了
+            if(ConfigData.CAMERA_HEIGHT + this.moveDistance >= this.totalBGHeight && this.isBGLoading == false)//需要加载背景图了
             {
-                // console.log("=========加载背景:" + this.loadBgIndex);
+                console.log("=========加载背景:" + this.loadBgIndex);
                 this.loadBG();
             }
         }
@@ -104,7 +107,7 @@ export class BGControl
      */
     private loadBG(_cb?: Function): void
     {
-
+        this.isBGLoading = true;
         // if(this.loadBgIndex + 1 >= ConfigData.MAX_BG_INDEX)
         //             {
         //                 cc.textureCache.addImage(cc.url.raw("resources/texture/img/background" + this.loadBgIndex + ".jpg"),(res) =>
@@ -124,15 +127,23 @@ export class BGControl
         {
             let tempIndex: number = this.nodeIndex == this.BG_COUNT ? 0 : this.nodeIndex;
             let node: cc.Node = this.bgNodeList[tempIndex];
-            this.bgNodeList[this.nodeIndex].getComponent(cc.Sprite).spriteFrame.setTexture(res);
-            BattleManager.getInstance().cameraCanvas.addChild(node);
-            node.setLocalZOrder(0);
-            if(this.lastBGHeight > 0)//说明不是第一张图片
+            this.bgNodeList[tempIndex].getComponent(cc.Sprite).spriteFrame.setTexture(res);
+            if(node.parent == null)
             {
-                node.y = (this.lastBGHeight / 2) + (node.height / 2);
+                BattleManager.getInstance().cameraCanvas.addChild(node);
             }
-            this.lastBGHeight = node.height;
-            this.totalBGHeight += this.lastBGHeight;
+            node.setLocalZOrder(0);
+            if(this.loadBgIndex == 1)//第一张图片
+            {
+                node.y = 0;
+            }
+            else
+            {
+                node.y = this.totalBGHeight / 2;
+            }
+            this.totalBGHeight += node.height;
+            console.log(">>>node.y = ",node.y,"nodeIndex = ",this.nodeIndex,"bgindex",this.loadBgIndex,"height =",node.height,"total ",this.totalBGHeight);
+            // this.lastBGHeight = node.height;
             if(_cb != null)
             {
                 _cb();
