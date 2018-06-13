@@ -53,6 +53,11 @@ export class BrickCell
         this.res.y = _y;
     }
 
+    public setRotation(rotaion: number): void
+    {
+        this.res.rotation = rotaion;
+    }
+
     /**
      * 播放完美动画
      */
@@ -75,8 +80,6 @@ export class BrickCell
      */
     public update(_endX: number,_endY: number,_callBack: Function): void
     {
-        // console.log("brick: ",this.res);
-        // console.log("==========screen frame: ",cc.view.getVisibleSize(),cc.view.getFrameSize());
         let offset: number = Math.abs(this.res.x - _endX);//掉落的楼层和底部楼层的偏差
         if(this.res.y - ConfigData.BRICK_FALL_SPEED > _endY)
         {
@@ -87,6 +90,7 @@ export class BrickCell
             /** 第一次掉落直接返回 */
             if(this.id == 0)
             {
+                this.res.y = _endY;
                 _callBack(BrickFallState.NORMAL);
                 return;
             }
@@ -103,20 +107,28 @@ export class BrickCell
                     _callBack(BrickFallState.FALLING);
                 }
             }
-            // else if(offset > 35) //触碰到楼层跌落
-            // {
-            //     _callBack(BrickFallState.COLLAPSE);
-            // }
+            else if(offset > ConfigData.NORMAL_OFFSET_X) //触碰到楼层跌落
+            {
+                _callBack(BrickFallState.COLLAPSE);
+            }
             else
             {
                 //盖楼成功
                 this.res.y = _endY;
-                if(this.res.x - _endX <= ConfigData.PERFECT_OFFEST_X)
+                if(offset <= ConfigData.PERFECT_OFFEST_X)
                 {
+                    console.log("perfect!!");
+
                     _callBack(BrickFallState.PERFECT);//完美 结束回调
+                }
+                else if(offset <= ConfigData.GOOD_OFFSET_X && offset > ConfigData.PERFECT_OFFEST_X)
+                {
+                    console.log("good!!");
+                    _callBack(BrickFallState.GOOD);
                 }
                 else
                 {
+                    console.log("normal!!");
                     _callBack(BrickFallState.NORMAL);//结束回调
                 }
             }

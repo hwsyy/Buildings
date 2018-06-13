@@ -35,13 +35,13 @@ export class Hook
     /** 钩子上一帧y坐标 */
     public m_iLastY: number = 0;
     /** 钩子x坐标 */
-    public m_iX: number = 360;//140-580
+    public m_iX: number = 360;
     /** 钩子y坐标 */
     public m_iY: number = 400;
     /**  */
     public m_iT: number = 0;
     /** 钩子移动速度 */
-    public m_iSpeed: number = 1.8;
+    public m_iSpeed: number = 2.2;
     /** 钩子摆动幅度 */
     public m_iSwingOffset: number = 220;
     /** 砖块向上弹跳幅度 */

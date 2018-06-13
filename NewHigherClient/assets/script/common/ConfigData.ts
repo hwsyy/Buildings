@@ -11,6 +11,15 @@ export class ConfigData
     /**砖块种类数量 */
     public static readonly BRICK_COUNT: number = 6;
 
+    /**完美偏移像素量（人口4） */
+    public static PERFECT_OFFEST_X: number = 20;
+
+    /** 还不错的偏移量（人口3） */
+    public static GOOD_OFFSET_X: number = 30;
+
+    /** 普通的偏移量(人口1) */
+    public static NORMAL_OFFSET_X: number = 60;
+
     /**砖块宽度 */
     public static BRICK_WIDTH: number = 120;
 
@@ -18,13 +27,10 @@ export class ConfigData
     public static BRICK_HEIGHT: number = 120;
 
     /**砖块下落速度 */
-    public static BRICK_FALL_SPEED: number = 20;
+    public static BRICK_FALL_SPEED: number = 30;
 
     /**起始地面高度 */
     public static INIT_FLOOR_Y: number = -490;
-
-    /**完美偏移像素量 */
-    public static PERFECT_OFFEST_X: number = 2;
 
     /**镜头移动速度 */
     public static CAMERA_MOVE_SPEED: number = 3;

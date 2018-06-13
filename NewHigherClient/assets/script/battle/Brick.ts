@@ -102,9 +102,11 @@ export class Brick
             }
         } else
         {
-
-            this.currentBrick.setPosition(pos.x - 200,pos.y - 100 - BattleManager.getInstance().cameraCanvas.y);
-
+            let offsetX: number = 70;
+            let ro: number = rotation * Math.PI / 180;
+            // this.currentBrick.setPosition(pos.x - offsetX*Math.tan(ro),pos.y - offsetX / ro);
+            this.currentBrick.setPosition(pos.x - 180,pos.y - 100 - BattleManager.getInstance().cameraCanvas.y);
+            this.currentBrick.setRotation(rotation);
         }
     }
 
@@ -128,11 +130,18 @@ export class Brick
         if(state == BrickFallState.PERFECT)//完美下落
         {
             this.perfectList.push(this.currentBrick);
-            if(this.perfectList.length > 1)
+            // if(this.perfectList.length > 1)
+            // {
+            //     for(let a: number = 0;a < this.perfectList.length;a++)
+            //     {
+            //         this.perfectList[a].playPerfectEffect();
+            //     }
+            // }
+            if(this.brickList.length > 1)
             {
-                for(let a: number = 0;a < this.perfectList.length;a++)
+                for(let i: number = 0;i < this.brickList.length;i++)
                 {
-                    this.perfectList[a].playPerfectEffect();
+                    this.brickList[i].playPerfectEffect();
                 }
             }
             if(this.brickList.length >= 3)
