@@ -102,11 +102,11 @@ export class Brick
             }
         } else
         {
-            let offsetX: number = 70;
-            let ro: number = rotation * Math.PI / 180;
+            // let offsetX: number = 70;
+            // let ro: number = rotation * Math.PI / 180;
             // this.currentBrick.setPosition(pos.x - offsetX*Math.tan(ro),pos.y - offsetX / ro);
-            this.currentBrick.setPosition(pos.x - 180,pos.y - 100 - BattleManager.getInstance().cameraCanvas.y);
-            this.currentBrick.setRotation(rotation);
+            this.currentBrick.setPosition(pos.x - 200,pos.y - 100 - BattleManager.getInstance().cameraCanvas.y);
+            // this.currentBrick.setRotation(rotation);
         }
     }
 
