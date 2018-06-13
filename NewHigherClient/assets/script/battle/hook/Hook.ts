@@ -148,3 +148,4 @@ export class Hook
             this.hook.position = cc.p(this.m_iX - this.m_iQiaoLiangX + 57,this.m_iY - this.m_iQiaoLiangY + 25);
         }
     }
+}

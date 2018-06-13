@@ -1,6 +1,7 @@
 import {ConfigData} from "../common/ConfigData";
 import {BattleManager} from "../manager/BattleManager";
 import {CameraRollType} from "../common/GameEnum";
+import {notDeepEqual} from "assert";
 
 /**
  * 背景控制器
@@ -10,15 +11,13 @@ import {CameraRollType} from "../common/GameEnum";
 export class BGControl
 {
     /**背景同时最大数量 */
-    private readonly BG_COUNT: number = 4;
+    private readonly BG_COUNT: number = 3;
     /**钩子资源 */
     private readonly BG_RES: string = "resources/texture/img/background";
     /**背景列表 三张背景图 上 中 下 */
     private bgNodeList: Array<cc.Node>;
     /**当前加载背景索引 */
     private loadBgIndex: number;
-    /**上一张背景高度 */
-    private lastBGHeight: number;
     /**当前所使用的节点 */
     private nodeIndex: number;
     /**上次摄像机所在Y坐标 */
@@ -52,7 +51,6 @@ export class BGControl
      */
     public startGame(): void
     {
-        this.lastBGHeight = 0;
         this.loadBgIndex = 1;
         this.nodeIndex = 0;
         this.lastCameraY = 0;
@@ -88,10 +86,8 @@ export class BGControl
         if(_direction == CameraRollType.UP)//向上
         {
             this.moveDistance += Math.abs(BattleManager.getInstance().cameraCanvas.y) - Math.abs(this.lastCameraY);
-            // console.log("=========移动背景:" + this.moveDistance,this.totalBGHeight,BattleManager.getInstance().cameraCanvas.y);
-            if(ConfigData.CAMERA_HEIGHT + this.moveDistance >= this.totalBGHeight && this.isBGLoading == false)//需要加载背景图了
+            if(ConfigData.CAMERA_HEIGHT + this.moveDistance >= this.totalBGHeight - ConfigData.BRICK_HEIGHT && this.isBGLoading == false)//需要加载背景图了
             {
-                console.log("=========加载背景:" + this.loadBgIndex);
                 this.loadBG();
             }
         }
@@ -108,26 +104,11 @@ export class BGControl
     private loadBG(_cb?: Function): void
     {
         this.isBGLoading = true;
-        // if(this.loadBgIndex + 1 >= ConfigData.MAX_BG_INDEX)
-        //             {
-        //                 cc.textureCache.addImage(cc.url.raw("resources/texture/img/background" + this.loadBgIndex + ".jpg"),(res) =>
-        //                 {
-        //                     this.bg1.getComponent(cc.Sprite).spriteFrame.setTexture(res);
-        //                 },this);
-        //             }
-        //             else
-        //             {
-        //                 cc.textureCache.addImage(cc.url.raw("resources/texture/img/background" + (this.loadBgIndex + 1) + ".jpg"),(res) =>
-        //                 {
-        //                     this.bg1.getComponent(cc.Sprite).spriteFrame.setTexture(res);
-        //                     this.bg1.y = this.bg.y + (this.bg.height / 2 + this.bg1.height / 2);
-        //                 },this);
-        //             }
         cc.textureCache.addImage(cc.url.raw(this.BG_RES + this.loadBgIndex + ".jpg"),(res) =>
         {
-            let tempIndex: number = this.nodeIndex == this.BG_COUNT ? 0 : this.nodeIndex;
-            let node: cc.Node = this.bgNodeList[tempIndex];
-            this.bgNodeList[tempIndex].getComponent(cc.Sprite).spriteFrame.setTexture(res);
+            this.nodeIndex = this.nodeIndex >= this.BG_COUNT ? 0 : this.nodeIndex;
+            let node: cc.Node = this.bgNodeList[this.nodeIndex];
+            node.getComponent(cc.Sprite).spriteFrame.setTexture(res);
             if(node.parent == null)
             {
                 BattleManager.getInstance().cameraCanvas.addChild(node);
@@ -136,21 +117,23 @@ export class BGControl
             if(this.loadBgIndex == 1)//第一张图片
             {
                 node.y = 0;
+                this.totalBGHeight = node.height / 2;
             }
             else
             {
-                node.y = this.totalBGHeight / 2;
+                node.y = this.totalBGHeight + node.height / 2;
+                this.totalBGHeight += node.height;
             }
-            this.totalBGHeight += node.height;
-            console.log(">>>node.y = ",node.y,"nodeIndex = ",this.nodeIndex,"bgindex",this.loadBgIndex,"height =",node.height,"total ",this.totalBGHeight);
-            // this.lastBGHeight = node.height;
+            // console.log(">>>node.y = ",node.y,"node.x",node.x,"contentsize",node.getContentSize(),"nodeIndex = ",this.nodeIndex,"bgindex",this.loadBgIndex,"height =",node.height,"total ",this.totalBGHeight);
             if(_cb != null)
             {
                 _cb();
             }
-            this.loadBgIndex++;
+            if(this.loadBgIndex < ConfigData.MAX_BG_INDEX)
+            {
+                this.loadBgIndex++;
+            }
             this.nodeIndex++;
-
         },this);
     }
 }
