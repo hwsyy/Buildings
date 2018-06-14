@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "cd708ed4-50b8-40d3-9896-84050a11b993",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "neirongqudiban": {
+      "ver": "1.0.3",
+      "uuid": "0c5b9a54-91ab-4b56-a886-d90421f3fb2e",
+      "rawTextureUuid": "cd708ed4-50b8-40d3-9896-84050a11b993",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 38,
+      "height": 38,
+      "rawWidth": 38,
+      "rawHeight": 38,
+      "borderTop": 14,
+      "borderBottom": 14,
+      "borderLeft": 14,
+      "borderRight": 14,
+      "subMetas": {}
+    }
+  }
+}

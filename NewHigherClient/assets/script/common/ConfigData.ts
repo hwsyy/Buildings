@@ -41,6 +41,11 @@ export class ConfigData
     /**最大背景图索引 */
     public static MAX_BG_INDEX: number = 6;
 
+    /** 大楼晃动幅度 */
+    public static BUILDING_MAX_SWING_X: number = 180;
+    /** 大楼晃动速度 */
+    public static BUILDING_SWING_SPEED: number = 0.5;
+
     /**摄像机高度 */
     // public static CAMERA_HEIGHT: number = cc.view.getVisibleSize().height;
     public static CAMERA_HEIGHT: number = 1280;

@@ -11,7 +11,7 @@ import {notDeepEqual} from "assert";
 export class BGControl
 {
     /**背景同时最大数量 */
-    private readonly BG_COUNT: number = 3;
+    private readonly BG_COUNT: number = 4;
     /**钩子资源 */
     private readonly BG_RES: string = "resources/texture/img/background";
     /**背景列表 三张背景图 上 中 下 */

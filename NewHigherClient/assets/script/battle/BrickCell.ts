@@ -1,6 +1,6 @@
 import {ConfigData} from "../common/ConfigData";
 import {BattleManager} from "../manager/BattleManager";
-import {BrickFallState} from "../common/GameEnum";
+import {BrickState} from "../common/GameEnum";
 
 /**
  * 砖块单元
@@ -27,6 +27,8 @@ export class BrickCell
     private perfectEffect: cc.Node;
     /**当前播放次数 */
     private currentPlayCount: number;
+    /** 偏移量 */
+    public offset: number;
 
     constructor(_id: number,_res: cc.Node,_perfectEffect: cc.Node)
     {
@@ -34,6 +36,7 @@ export class BrickCell
         this.res = _res;
         this.perfectEffectRes = _perfectEffect.getChildByName("sp_perfectEffect");
         this.currentPlayCount = 0;
+        this.offset = 0;
     }
 
     public init(_parent: cc.Node): void
@@ -91,7 +94,7 @@ export class BrickCell
             if(this.id == 0)
             {
                 this.res.y = _endY;
-                _callBack(BrickFallState.NORMAL);
+                _callBack(BrickState.NORMAL);
                 return;
             }
             if(offset > ConfigData.BRICK_WIDTH)//没有触碰到楼层跌落
@@ -104,12 +107,14 @@ export class BrickCell
                     {
                         this.parent.removeChild(this.res);
                     }
-                    _callBack(BrickFallState.FALLING);
+                    _callBack(BrickState.FALLING);
                 }
+                console.log("falling!!");
             }
             else if(offset > ConfigData.NORMAL_OFFSET_X) //触碰到楼层跌落
             {
-                _callBack(BrickFallState.COLLAPSE);
+                console.log("callapse!!");
+                _callBack(BrickState.COLLAPSE);
             }
             else
             {
@@ -119,17 +124,17 @@ export class BrickCell
                 {
                     console.log("perfect!!");
 
-                    _callBack(BrickFallState.PERFECT);//完美 结束回调
+                    _callBack(BrickState.PERFECT);//完美 结束回调
                 }
                 else if(offset <= ConfigData.GOOD_OFFSET_X && offset > ConfigData.PERFECT_OFFEST_X)
                 {
                     console.log("good!!");
-                    _callBack(BrickFallState.GOOD);
+                    _callBack(BrickState.GOOD);
                 }
                 else
                 {
                     console.log("normal!!");
-                    _callBack(BrickFallState.NORMAL);//结束回调
+                    _callBack(BrickState.NORMAL);//结束回调
                 }
             }
         }

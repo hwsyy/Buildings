@@ -111,6 +111,7 @@ export default class ServerHandler
     // 玩家登录
     public Login(): void
     {
+        console.log("login method");
         let req: ReqPlayerLogin = ReqPlayerLogin.create();
         let buff: Uint8Array = ReqPlayerLogin.encode(req).finish();
         Core.NetMgr.sendBody(buff,CSProtoID.REQ_PLAYER_LOGIN);

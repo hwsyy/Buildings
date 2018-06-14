@@ -107,6 +107,7 @@ export default class WxSdkHandle implements ISdkHandle
             }
             stLoginObj.fail = function(errMsg)
             {
+                console.log("wechat login failed");
                 Core.EventMgr.Emit(EventID.SdkEvent.CB_FAIL_LOGIN,errMsg);
             }
             stLoginObj.complete = function(res)

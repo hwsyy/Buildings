@@ -9,6 +9,8 @@ import {BGControl} from "../battle/BGControl";
 import MainScene from "../scene/MainScene";
 import InitScene from "../scene/InitScene";
 
+
+
 /**
  * 战斗管理器
  * @author zhouyulong
@@ -175,9 +177,16 @@ export class BattleManager
             }
         }
         this.hook.update(dt);
-        let pos: cc.Vec2 = this.hook.hook.convertToWorldSpaceAR(this.hook.hook.position);
-        let pos2: cc.Vec2 = cc.p(pos.x / 2,pos.y / 2);
+        // let pos: cc.Vec2 = this.hook.hook.convertToWorldSpaceAR(this.hook.hook.position);
+        // let pos2: cc.Vec2 = cc.p(pos.x / 2,pos.y / 2);
+        let pos: cc.Vec2 = cc.p(this.hook.mainHook.x + this.hook.hook.x,this.hook.mainHook.y + this.hook.hook.y);
         // console.log(">>>>>>>>>>>>>>>>hook position: ",this.hook.hook.position,pos2);
-        this.brick.update(pos2);
+        this.brick.update(pos,this.hook.hook.rotation);
+    }
+
+    /** 计算两点的距离*/
+    public GetDistance(pos_1: cc.Vec2,pos_2: cc.Vec2): number
+    {
+        return Math.sqrt((pos_1.x - pos_2.x) * (pos_1.x - pos_2.x) + (pos_1.y - pos_2.y) * (pos_1.y - pos_2.y));
     }
 }

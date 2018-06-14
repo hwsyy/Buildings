@@ -29,7 +29,7 @@ export class Hook
     /** 钩子初始x坐标 */
     public m_iOriginX: number = 360;
     /** 钩子初始y坐标 */
-    public m_iOriginY: number = 400;
+    public m_iOriginY: number = 360;
     /** 钩子上一帧x坐标 */
     public m_iLastX: number = 0;
     /** 钩子上一帧y坐标 */
@@ -37,13 +37,13 @@ export class Hook
     /** 钩子x坐标 */
     public m_iX: number = 360;
     /** 钩子y坐标 */
-    public m_iY: number = 400;
+    public m_iY: number = 360;
     /**  */
     public m_iT: number = 0;
     /** 钩子移动速度 */
     public m_iSpeed: number = 2.2;
     /** 钩子摆动幅度 */
-    public m_iSwingOffset: number = 220;
+    public m_iSwingOffset: number = 180;
     /** 砖块向上弹跳幅度 */
     public m_iUp_b: number = 50;
     /** 砖块向下弹跳幅度 */
@@ -94,11 +94,7 @@ export class Hook
         }
     }
 
-    //** 计算两点的距离*/
-    private GetDistance(pos_1: cc.Vec2,pos_2: cc.Vec2): number
-    {
-        return Math.sqrt((pos_1.x - pos_2.x) * (pos_1.x - pos_2.x) + (pos_1.y - pos_2.y) * (pos_1.y - pos_2.y));
-    }
+
 
     //** 获取中点的位置*/
     private GetMidPostion(pos_1: cc.Vec2,pos_2: cc.Vec2): cc.Vec2
@@ -137,7 +133,7 @@ export class Hook
 
         let ro: number = Math.atan((this.m_iQiaoLiangX - this.m_iX) / (this.m_iQiaoLiangY - this.m_iY - 70));
 
-        let RopeHeight: number = this.GetDistance(cc.p(this.m_iX,this.m_iY + 70),cc.p(this.m_iQiaoLiangX,this.m_iQiaoLiangY)) - 22;
+        let RopeHeight: number = BattleManager.getInstance().GetDistance(cc.p(this.m_iX,this.m_iY + 70),cc.p(this.m_iQiaoLiangX,this.m_iQiaoLiangY)) - 22;
         if(this.rope != null)
         {
             this.rope.height = RopeHeight;
@@ -145,6 +141,7 @@ export class Hook
         }
         if(this.hook != null)
         {
+            this.hook.rotation = this.rope.rotation * 0.5;//钩子弧度只有绳子的一半
             this.hook.position = cc.p(this.m_iX - this.m_iQiaoLiangX + 57,this.m_iY - this.m_iQiaoLiangY + 25);
         }
     }

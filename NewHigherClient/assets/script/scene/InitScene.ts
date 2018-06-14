@@ -4,6 +4,9 @@ import {UILoading} from "../ui/UILoading";
 import {UIBattle} from "../ui/UIBattle";
 import {UIStart} from "../ui/UIStart";
 import {GameEventType} from "../common/GameEnum";
+import {UIGzh} from "../ui/UIGzh";
+import {UIRank} from "../ui/UIRank";
+import {UIBalance} from "../ui/UIBalance";
 import ShareApplication from "../common/ShareApplication";
 import {ResStruct} from "../../corelibs/util/ResourcesMgr";
 import {ResType} from "../../corelibs/CoreDefine";
@@ -36,11 +39,16 @@ export default class InitScene extends cc.Component
 
         //初始化corelib
         Core.Get().Init();
+        Core.SdkHandleMgr.Init();
+        Core.Platform.m_stPlatfrom.Login();
 
         //初始化ui资源
         Core.UIMgr.Register("UILoading","prefabs/ui/UILoading",UILoading);
         Core.UIMgr.Register("UIBattle","prefabs/ui/UIBattle",UIBattle);
         Core.UIMgr.Register("UIStart","prefabs/ui/UIStart",UIStart);
+        Core.UIMgr.Register("UIGzh" , "prefabs/ui/UIGzh" , UIGzh );
+        Core.UIMgr.Register("UIRank","prefabs/ui/UIRank" , UIRank);
+        Core.UIMgr.Register("UIBalance" , "prefabs/ui/UIBalance" , UIBalance);
 
         Core.EventMgr.BindEvent(GameEventType.INIT_RES_LOAD_COMPLETE,this.initResLoadHandler,this);
 

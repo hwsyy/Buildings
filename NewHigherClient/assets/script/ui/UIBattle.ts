@@ -5,6 +5,7 @@ import {BattleManager} from "../manager/BattleManager";
 import Core from "../../corelibs/Core";
 import {GameEventType} from "../common/GameEnum";
 import {PlayerData} from "../common/PlayerData";
+import {All} from "../common/All";
 
 /**
  * 战斗ui
@@ -28,6 +29,8 @@ export class UIBattle extends BaseUI
     /**人口 */
     private lab_population: cc.Label;
 
+    private huise: cc.Node;
+
     constructor()
     {
         super(UIType.Normal,UIShowMode.Normal);
@@ -39,6 +42,9 @@ export class UIBattle extends BaseUI
 
         this.lab_floor = this.UINode.getChildByName("lab_floor").getComponent(cc.Label);
         this.lab_population = this.UINode.getChildByName("lab_population").getComponent(cc.Label);
+
+        this.huise = this.UINode.getChildByName("huise");
+        this.huise.on(cc.Node.EventType.TOUCH_END ,this.touchTest , this );
 
         this.hpList = new Array<cc.Node>();
         for(let a: number = 0;a < BattleManager.getInstance().arrResData.length;a++)
@@ -57,6 +63,13 @@ export class UIBattle extends BaseUI
         Core.EventMgr.BindEvent(GameEventType.UPDATE_FLOOR,this.updateFloorHandler,this);
         Core.EventMgr.BindEvent(GameEventType.UPDATE_POPULATION,this.updatePopulationHandler,this);
         Core.EventMgr.BindEvent(GameEventType.UPDATE_HP,this.updateHPHandler,this);
+    }
+
+    private touchTest(): void
+    {
+        All.maxScore = 50;
+        All.currentScore = 100;
+        Core.UIMgr.ShowUI("UIBalance");
     }
 
     public Display(): void

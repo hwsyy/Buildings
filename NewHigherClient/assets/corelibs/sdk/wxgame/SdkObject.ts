@@ -1,7 +1,7 @@
 import {ImageUrlType,Gender,ShareCbType,TextAlign} from "../SdkType";
 import Core from "../../Core";
 import {EventID} from "../../CoreDefine";
-import {LinkType} from "../../../script/manager/LinkManager";
+import {LinkType} from "../../../corelibs/manager/LinkManager";
 
 /**用户信息 */
 export class UserInfo

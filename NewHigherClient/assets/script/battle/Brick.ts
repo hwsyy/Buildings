@@ -4,7 +4,7 @@ import {ConfigData} from "../common/ConfigData";
 import Core from "../../corelibs/Core";
 import {BrickCell} from "./BrickCell";
 import {CameraRollType,GameEventType} from "../common/GameEnum";
-import {BrickFallState} from "../common/GameEnum";
+import {BrickState} from "../common/GameEnum";
 import {PlayerData} from "../common/PlayerData";
 
 /**
@@ -24,6 +24,13 @@ export class Brick
     private perfectRes: cc.Node;
     /**砖块列表 */
     private brickList: Array<BrickCell>;
+    /** 大楼初始x轴 */
+    private m_iBuildingOriginX: number;
+    /** 大楼当前倾斜角度 */
+    private m_iCurrentInclination: number = 0;
+    /** 大楼高度 */
+    private m_iBuildingHeight: number;
+
     /**是否下落中 */
     public isFalling: boolean;
     /**当前的砖块 */
@@ -84,8 +91,28 @@ export class Brick
     /**
      * 帧刷新
      */
-    public update(pos: cc.Vec2): void
+    public update(pos: cc.Vec2,rotation: number): void
     {
+        if(this.brickList.length > 4)//大楼开始摇晃
+        {
+            for(let i: number = 0;i < this.brickList.length - 1;i++)
+            {
+                let brick: BrickCell = this.brickList[i];
+                if(i == 0)
+                {
+                    let brick_h = BattleManager.getInstance().GetDistance(brick.res.position,this.brickList[0].res.position);//高度
+                    this.m_iCurrentInclination += ConfigData.BUILDING_SWING_SPEED;
+                    this.m_iCurrentInclination %= 360;
+                    brick.res.x = ConfigData.BUILDING_MAX_SWING_X * Math.sin(Math.PI * this.m_iCurrentInclination / 180.0) + brick.offset;
+                }
+                else 
+                {
+                    brick.res.x = this.brickList[i - 1].res.x + brick.offset;
+                }
+                // brick.res.y = brick_h * (1 - Math.cos(Math.PI * this.m_iCurrentInclination / 180.0));
+
+            }
+        }
         if(this.isFalling == true)
         {
             if(this.currentBrick != null)
@@ -102,10 +129,10 @@ export class Brick
             }
         } else
         {
-            // let offsetX: number = 70;
-            // let ro: number = rotation * Math.PI / 180;
-            // this.currentBrick.setPosition(pos.x - offsetX*Math.tan(ro),pos.y - offsetX / ro);
-            this.currentBrick.setPosition(pos.x - 200,pos.y - 100 - BattleManager.getInstance().cameraCanvas.y);
+            //brick.postion和hook.postion相距70
+            let theta: number = rotation * Math.PI / 180;
+            let length: number = 70;
+            this.currentBrick.setPosition(pos.x - length * Math.sin(theta),pos.y - length * Math.cos(theta));
             // this.currentBrick.setRotation(rotation);
         }
     }
@@ -125,9 +152,13 @@ export class Brick
     /**
      * 结束下落
      */
-    private endFall(state: BrickFallState): void
+    private endFall(state: BrickState): void
     {
-        if(state == BrickFallState.PERFECT)//完美下落
+        if(this.brickList.length > 1)
+        {
+            this.currentBrick.offset = this.currentBrick.res.x - this.brickList[this.brickList.length - 2].res.x;
+        }
+        if(state == BrickState.PERFECT)//完美下落
         {
             this.perfectList.push(this.currentBrick);
             // if(this.perfectList.length > 1)
@@ -153,16 +184,22 @@ export class Brick
         else
         {
             this.perfectList.length = 0;
-            if(state == BrickFallState.FALLING)
+            if(state == BrickState.FALLING)
             {
                 this.brickList.pop();
                 Core.EventMgr.Emit(GameEventType.UPDATE_HP,null);
             }
-            // else if(state == BrickFallState.COLLAPSE)
-            // {
-            //     // this.brickList.pop();
-            //     // this.brickList.pop();
-            // }
+            else if(state == BrickState.COLLAPSE)
+            {
+                this.brickList.pop();
+                if(this.brickList.length >= 3)
+                {
+                    BattleManager.getInstance().moveCameraStart(CameraRollType.DOWN);
+                    // console.log(">>>>>perfect bricklist:",this.brickList);
+                }
+                // this.brickList.pop();
+                return;
+            }
             else
             {
                 if(this.brickList.length >= 3)

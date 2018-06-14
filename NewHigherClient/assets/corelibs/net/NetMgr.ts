@@ -126,6 +126,7 @@ export default class NetMgr
     private onOpen(): void
     {
         console.log("net connect success.");
+        Core.ServerHandler.Login();
 
         switch(this.m_iCurrentNetType)
         {
@@ -141,7 +142,7 @@ export default class NetMgr
                     this.firstLoad = true;
                     // 跳转游戏主场景
                     cc.log("enter Main scene");
-                    cc.director.loadScene(CoreConfig.GAME_SCENE);
+                    // cc.director.loadScene(CoreConfig.GAME_SCENE);
                 }
                 break;
         }

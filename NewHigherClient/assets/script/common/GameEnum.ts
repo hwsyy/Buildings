@@ -31,7 +31,7 @@ export enum CameraRollType
 }
 
 //楼层跌落状态
-export enum BrickFallState
+export enum BrickState
 {
     PERFECT = "perfect",//人口4
     GOOD = "good",//人口3
