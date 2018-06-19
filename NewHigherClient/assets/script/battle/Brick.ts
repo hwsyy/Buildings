@@ -6,6 +6,7 @@ import {BrickCell} from "./BrickCell";
 import {CameraRollType,GameEventType} from "../common/GameEnum";
 import {BrickState} from "../common/GameEnum";
 import {PlayerData} from "../common/PlayerData";
+import {ResType} from "../../corelibs/CoreDefine";
 
 /**
  * 砖块类
@@ -24,6 +25,8 @@ export class Brick
     private perfectRes: cc.Node;
     /**砖块列表 */
     private brickList: Array<BrickCell>;
+    /** 人口动画列表 */
+    private brickAniList: Array<BrickCell>;
     /** 大楼初始x轴 */
     private m_iBuildingOriginX: number;
     /** 大楼当前倾斜角度 */
@@ -40,10 +43,13 @@ export class Brick
     /**完美列表 */
     private perfectList: Array<BrickCell>;
 
+
+
     constructor()
     {
         this.brickResList = new Array<cc.Node>();
         this.brickList = new Array<BrickCell>();
+        this.brickAniList = new Array<BrickCell>();
         this.perfectList = new Array<BrickCell>();
     }
 
@@ -76,6 +82,15 @@ export class Brick
         this.currentFallY = ConfigData.INIT_FLOOR_Y;
         this.addBrick(1000,-300);
     }
+    public endGame(): void
+    {
+        for(let i = 0;i < this.brickList.length;i++)
+        {
+            let brick: BrickCell = this.brickList[i];
+            brick.res.removeFromParent();
+        }
+        this.currentBrick.res.removeFromParent();
+    }
 
     /**
      * 投放砖块
@@ -93,6 +108,19 @@ export class Brick
      */
     public update(pos: cc.Vec2,rotation: number): void
     {
+
+        if(this.brickAniList.length > 0)
+        {
+            let lastBrick: BrickCell = this.brickAniList[0];
+            if(lastBrick.m_bShouldFly)
+            {
+                lastBrick.animateWithBrickPopulation();
+            }
+            else
+            {
+                this.brickAniList.shift();
+            }
+        }
         if(this.brickList.length > 4)//大楼开始摇晃
         {
             for(let i: number = 0;i < this.brickList.length - 1;i++)
@@ -113,6 +141,7 @@ export class Brick
 
             }
         }
+
         if(this.isFalling == true)
         {
             if(this.currentBrick != null)
@@ -127,7 +156,8 @@ export class Brick
                 }
                 this.currentBrick.update(_endX,this.currentFallY,this.endFall.bind(this));
             }
-        } else
+        }
+        else
         {
             //brick.postion和hook.postion相距70
             let theta: number = rotation * Math.PI / 180;
@@ -158,60 +188,70 @@ export class Brick
         {
             this.currentBrick.offset = this.currentBrick.res.x - this.brickList[this.brickList.length - 2].res.x;
         }
-        if(state == BrickState.PERFECT)//完美下落
+
+        if(state == BrickState.COLLAPSE)
         {
-            this.perfectList.push(this.currentBrick);
-            // if(this.perfectList.length > 1)
-            // {
-            //     for(let a: number = 0;a < this.perfectList.length;a++)
-            //     {
-            //         this.perfectList[a].playPerfectEffect();
-            //     }
-            // }
-            if(this.brickList.length > 1)
+            let brick: BrickCell = this.brickList[this.brickList.length - 2];
+            this.currentBrick.m_stLastBrick = brick;
+            PlayerData.population -= brick.m_iPopulation;
+            if(this.brickList.length > 3)
             {
-                for(let i: number = 0;i < this.brickList.length;i++)
-                {
-                    this.brickList[i].playPerfectEffect();
-                }
+                BattleManager.getInstance().moveCameraStart(CameraRollType.DOWN);
+                Core.EventMgr.Emit(GameEventType.UPDATE_HP,null);
             }
-            if(this.brickList.length >= 3)
+            return;
+        }
+        if(state == BrickState.FALLING)
+        {
+            this.brickList.pop();
+            Core.EventMgr.Emit(GameEventType.UPDATE_HP,null);
+        }
+        else if(state == BrickState.CRACK)
+        {
+            this.brickList.pop();
+            let brick: BrickCell = this.brickList.pop();
+            if(brick.res.parent != null)
             {
-                BattleManager.getInstance().moveCameraStart(CameraRollType.UP);
-                // console.log(">>>>>perfect bricklist:",this.brickList);
+                brick.res.removeFromParent();
             }
         }
         else
         {
-            this.perfectList.length = 0;
-            if(state == BrickState.FALLING)
+            if(state == BrickState.PERFECT)//完美下落
             {
-                this.brickList.pop();
-                Core.EventMgr.Emit(GameEventType.UPDATE_HP,null);
-            }
-            else if(state == BrickState.COLLAPSE)
-            {
-                this.brickList.pop();
-                if(this.brickList.length >= 3)
+                this.brickAniList.push(this.currentBrick);
+                this.perfectList.push(this.currentBrick);
+                if(this.brickList.length > 1)
                 {
-                    BattleManager.getInstance().moveCameraStart(CameraRollType.DOWN);
-                    // console.log(">>>>>perfect bricklist:",this.brickList);
+                    for(let i: number = 0;i < this.brickList.length;i++)
+                    {
+                        this.brickList[i].playPerfectEffect();
+                    }
                 }
-                // this.brickList.pop();
-                return;
+                PlayerData.population += 4;
+                this.currentBrick.m_iPopulation = 4;
             }
-            else
+            else if(state == BrickState.GOOD)
             {
-                if(this.brickList.length >= 3)
-                {
-                    BattleManager.getInstance().moveCameraStart(CameraRollType.UP);
-                    // console.log(">>>>>normal bricklist:",this.brickList);
-                }
+                this.brickAniList.push(this.currentBrick);
+                PlayerData.population += 2;
+                this.currentBrick.m_iPopulation = 2;
+            }
+            else if(state == BrickState.NORMAL)
+            {
+                this.brickAniList.push(this.currentBrick);
+                PlayerData.population += 1;
+                this.currentBrick.m_iPopulation = 1;
+            }
+            if(this.brickList.length >= 3)
+            {
+                BattleManager.getInstance().moveCameraStart(CameraRollType.UP);
             }
         }
-        // console.log(">>>>> bricklist:",this.brickList);
+
         PlayerData.floor = this.brickList.length;//减去钩子上挂着的
         Core.EventMgr.Emit(GameEventType.UPDATE_FLOOR,null);
+        Core.EventMgr.Emit(GameEventType.UPDATE_POPULATION,null);
 
         //更新brick
         if(this.isFalling == true)
@@ -221,4 +261,7 @@ export class Brick
             this.addBrick(1000,0);
         }
     }
+
+
+
 }

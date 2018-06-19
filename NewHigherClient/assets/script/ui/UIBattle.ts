@@ -43,9 +43,6 @@ export class UIBattle extends BaseUI
         this.lab_floor = this.UINode.getChildByName("lab_floor").getComponent(cc.Label);
         this.lab_population = this.UINode.getChildByName("lab_population").getComponent(cc.Label);
 
-        this.huise = this.UINode.getChildByName("huise");
-        this.huise.on(cc.Node.EventType.TOUCH_END ,this.touchTest , this );
-
         this.hpList = new Array<cc.Node>();
         for(let a: number = 0;a < BattleManager.getInstance().arrResData.length;a++)
         {
@@ -63,13 +60,8 @@ export class UIBattle extends BaseUI
         Core.EventMgr.BindEvent(GameEventType.UPDATE_FLOOR,this.updateFloorHandler,this);
         Core.EventMgr.BindEvent(GameEventType.UPDATE_POPULATION,this.updatePopulationHandler,this);
         Core.EventMgr.BindEvent(GameEventType.UPDATE_HP,this.updateHPHandler,this);
-    }
+        // Core.EventMgr.BindEvent(GameEventType.END_GAME,this.endGame,this);
 
-    private touchTest(): void
-    {
-        All.maxScore = 50;
-        All.currentScore = 100;
-        Core.UIMgr.ShowUI("UIBalance");
     }
 
     public Display(): void
@@ -89,6 +81,10 @@ export class UIBattle extends BaseUI
     public Hiding(): void
     {
         this.UINode.off(cc.Node.EventType.TOUCH_END,this.clickStageHandler,this);
+    }
+    public endGame(): void
+    {
+
     }
 
     /**

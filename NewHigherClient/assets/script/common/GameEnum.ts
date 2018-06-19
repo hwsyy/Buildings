@@ -20,6 +20,8 @@ export enum GameEventType
     UPDATE_POPULATION,
     /** 更新生命值(hp) */
     UPDATE_HP,
+    /** 结束游戏 */
+    END_GAME,
 }
 
 //摄像机滚动方向
@@ -36,7 +38,8 @@ export enum BrickState
     PERFECT = "perfect",//人口4
     GOOD = "good",//人口3
     NORMAL = "normal",//人口1
-    COLLAPSE = "collapse",//碰撞跌落
+    COLLAPSE = "collapse",//碰撞
     FALLING = "falling",//自由跌落
+    CRACK = "crack",//碰撞跌落
 
 }

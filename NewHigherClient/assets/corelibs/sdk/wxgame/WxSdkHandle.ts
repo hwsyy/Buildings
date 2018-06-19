@@ -238,6 +238,7 @@ export default class WxSdkHandle implements ISdkHandle
                 msgData.data = data;
                 msgData.shareTicket = shareTicket;
             }
+            console.log("visit tencent");
             this.m_stOpendataContext.postMessage(msgData);
         }
     }

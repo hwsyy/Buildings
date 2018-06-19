@@ -4,6 +4,7 @@ import Core from "../Core";
 import {CSProtoID} from "../proto/msg";
 import CoreConfig from "../CoreConfig";
 import {EventID} from "../CoreDefine";
+import { All } from "../../script/common/All";
 
 export default class NetMgr
 {
@@ -25,6 +26,13 @@ export default class NetMgr
         this.m_stMsgHeader = null;
         this.m_iCurrentNetType = NetType.Null;
     }
+    public isConnect(): boolean
+    {
+        if (!this.m_stWebSoket || this.m_stWebSoket.readyState != WebSocket.OPEN) {
+            return false;
+        }
+        return true;
+    } 
 
     private RegiesterEvent(): void
     {

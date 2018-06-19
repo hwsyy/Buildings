@@ -8,7 +8,8 @@ import {ConfigData} from "../common/ConfigData";
 import {BGControl} from "../battle/BGControl";
 import MainScene from "../scene/MainScene";
 import InitScene from "../scene/InitScene";
-
+import {All} from "../common/All";
+import {showToast} from "../../corelibs/util/Toast";
 
 
 /**
@@ -111,9 +112,16 @@ export class BattleManager
         this.state = GameStateType.NOGAMING;
         this.mainComponent.unschedule(this.update);
         this.hook.hide();
+        this.brick.endGame();
         Core.UIMgr.CloseUI("UIBattle");
-        this.bgControl.endGame();
-        cc.director.loadScene("InitScene");
+        // this.bgControl.endGame();
+        // cc.director.loadScene("InitScene");
+        All.maxScore = 50;
+        All.currentScore = 100;
+        Core.UIMgr.ShowUI("UIBalance").showHandlerOnce(() =>
+        {
+
+        });
     }
 
     /**
@@ -154,6 +162,10 @@ export class BattleManager
      */
     private update(dt: number)
     {
+        if(this.state == GameStateType.NOGAMING)
+        {
+            return;
+        }
         if(this.isMoveCamera == true)//镜头移动
         {
             if(this.cameraMoveCount < ConfigData.CAMERA_MOVE_COUNT)

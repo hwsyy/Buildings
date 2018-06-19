@@ -10,7 +10,6 @@ import { Enum } from "protobufjs";
 import { POINT_CONVERSION_UNCOMPRESSED } from "constants";
 import {ENUMS} from "../common/Enums"
 import { MessageType } from "../../corelibs/sdk/SdkType";
-import { ReqUpdatePlayerMaxScore, GlobalProtoID } from "../pp/proto";
 
 export class UIBalance extends BaseUI {
     private new_record: cc.Node;
@@ -22,6 +21,7 @@ export class UIBalance extends BaseUI {
     private rankCanvas: cc.Component;
     private canvasConfig: CanvasConfig;
     private rankConfig: RankConfig;
+    private current_score: cc.Node;
 
     constructor() 
     {
@@ -38,13 +38,14 @@ export class UIBalance extends BaseUI {
         this.button_back = this.UINode.getChildByName("button_back");
         this.button_playAgain = this.UINode.getChildByName("button_playAgain");
         this.rankCanvas = this.UINode.getChildByName("backgroundBottom").getChildByName("rankCanvas").getComponent(cc.Component);
+        this.current_score = this.UINode.getChildByName("backgroundTop").getChildByName("current_score");
 
         this.button_back.on(cc.Node.EventType.TOUCH_END , this.returnHandler , this);
         this.button_vs.on(cc.Node.EventType.TOUCH_END , this.shareHandler , this);
         this.button_playAgain.on(cc.Node.EventType.TOUCH_END , this.againHandler , this);
         this.button_rank.on(cc.Node.EventType.TOUCH_END , this.rankHandler , this);
 
-        this.canvasConfig = new CanvasConfig();
+        this.canvasConfig = new CanvasConfig();   
 
         this.rankConfig = new RankConfig();
         this.rankConfig.m_iRankNumberBeginY = 50;
@@ -66,18 +67,21 @@ export class UIBalance extends BaseUI {
 
     Display(): void
     {
-        console.log("new uibalance display" + "max:" + All.maxScore + "current:" + All.currentScore);
+        // let req: ReqUpdatePlayerMaxScore = ReqUpdatePlayerMaxScore.create();
+        // console.log("new uibalance display" + "max:" + All.maxScore + "current:" + All.currentScore);
         if (All.currentScore > All.maxScore) {
             this.new_record.active = true;
-            Core.SdkHandleMgr.UploadDataToCloud("score" , All.currentScore.toString());
-            let req: ReqUpdatePlayerMaxScore = ReqUpdatePlayerMaxScore.create();
-            req.score = All.currentScore;
-            let buff: Uint8Array = ReqUpdatePlayerMaxScore.encode(req).finish();
-            Core.ServerHandler.PlayerGlobalData(GlobalProtoID.REQ_UPDATE_PLAY_MAX_SCORE , buff);
+            this.current_score.active = false;
+        //     Core.SdkHandleMgr.UploadDataToCloud("score" , All.currentScore.toString());
+        //     let req: ReqUpdatePlayerMaxScore = ReqUpdatePlayerMaxScore.create();
+        //     req.score = All.currentScore;
+        //     let buff: Uint8Array = ReqUpdatePlayerMaxScore.encode(req).finish();
+        //     Core.ServerHandler.PlayerGlobalData(GlobalProtoID.REQ_UPDATE_PLAYER_MAX_SCORE , buff);
         }
         else
         {
             this.new_record.active = false;
+            this.current_score.active = true;
         }
         if (cc.sys.platform != cc.sys.WECHAT_GAME) {
             return;
@@ -130,8 +134,14 @@ export class UIBalance extends BaseUI {
     
     private againHandler(): void
     {
+        // Core.UIMgr.CloseUI("UIBalance");
+        // BattleManager.getInstance().startGame();
         Core.UIMgr.CloseUI("UIBalance");
-        BattleManager.getInstance().startGame();
+        // BattleManager.getInstance().startGame();
+        cc.director.loadScene('MainScene',function()
+        {
+            console.log('MainScene loaded!');
+        });
     }
 
     private rankHandler(): void
