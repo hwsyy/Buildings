@@ -23,9 +23,9 @@ export default class CoreConfig
 
     public static API_SECRET = "jsl3JKL380934LO)21mhjs#@!JU";
 
-    // public static H5_URL: string = "ws://10.0.128.146:11000";//H5地址
-    public static H5_URL: string = "ws://42.62.22.164.11000";//H5地址
-    // public static WeCat_URL: string = 'http://dev-h5auth.123u.com/index.php';//微信地址
+    public static H5_URL: string = "ws://10.0.128.146:11000";//H5地址
+    // public static H5_URL: string = "ws://42.62.22.164.11000";//H5地址
     public static WeCat_URL: string = 'https://thktest.123u.com/index.php';//微信地址
+    // public static WeCat_URL: string = 'https://h5auth.123u.com/index.php';//微信地址
 }
 

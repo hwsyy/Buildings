@@ -3,6 +3,7 @@ import {UIType,UIShowMode} from "../../corelibs/uiframe/UIMgr";
 import {BattleManager} from "../manager/BattleManager";
 import Core from "../../corelibs/Core";
 import { ENUMS } from "../common/Enums";
+import { Toast, showToast } from "../../corelibs/util/Toast";
 
 /**
  * 开始界面
@@ -71,7 +72,7 @@ export class UIStart extends BaseUI
     }
     private showMaterial(): void
     {
-
+        showToast("敬请期待！");
     }
     private showFollow(): void
     {

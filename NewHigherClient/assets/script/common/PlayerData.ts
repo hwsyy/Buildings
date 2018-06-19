@@ -6,10 +6,10 @@
 export class PlayerData
 {
     /**当前楼层 */
-    public static floor: number;
+    public static floor: number = 0;
 
     /**当前人口 */
-    public static population: number;
+    public static population: number = 0;
     /*** 当前生命值（HP） */
     public static hp_count: number;
 }

@@ -101,7 +101,7 @@ export class UIRank extends BaseUI{
         Core.EventMgr.UnbindEvent(EventID.SdkEvent.CB_SHARE_SUCCESS , this.shareSuccess , this);
     }
     private rankListGo(): void
-    {
+    { 
         this.stRankConfig.action = MessageType.RestCurrPage;
         if (ENUMS.RANK_TYPE.FRIEND_RANK == this.rankType) {
             Core.SdkHandleMgr.ShowFriendRank(this.stRankConfig);

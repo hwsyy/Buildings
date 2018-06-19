@@ -18,7 +18,7 @@ export default class NewClass extends cc.Component
     }
     start()
     {
-        this.backgroundMusic.play();
+        // this.backgroundMusic.play();
     }
 
     // update (dt) {}

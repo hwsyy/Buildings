@@ -45,6 +45,13 @@ export class ConfigData
     public static BUILDING_MAX_SWING_X: number = 180;
     /** 大楼晃动速度 */
     public static BUILDING_SWING_SPEED: number = 0.5;
+    /**
+     * 砖块碰撞跌落时x方向的速度
+     */
+    public static BRICK_SPEED_X: number = 5;
+    /**砖块碰撞跌落时旋转速度(非弧度单位) */
+    public static BRICK_ROTATE_SPEED: number = 5;
+
 
     /**摄像机高度 */
     // public static CAMERA_HEIGHT: number = cc.view.getVisibleSize().height;

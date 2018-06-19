@@ -1,7 +1,7 @@
 import NetMgr,{NetType} from "../../corelibs/net/NetMgr";
 import {MsgHeader} from "../../corelibs/net/MsgHeader";
 import Core from "../Core";
-import {CSProtoID,ReqPlayerCreateTeam,ReqPlayerJoinTeam,ReqPlayerStartGame,InfPlayerStartGame,ReqPlayerLogin,RspPlayerLogin,ReqPlayerGameData,InfPlayerGameData,ReqPlayerGlobalData,InfPlayerGlobalData,RspPlayerTeamAction,ReqPlayerLeaveTeam,InfPlayerTeamAction,ReqPlayerStepLock,PlayerOption,InfPlayerStepLock,InfPlayerMatch,ReqPing,RspPing,ReqPlayerToGatewayMgr,RspPlayerToGatewayMgr,ReqPlayerEndGame,InfPlayerEndGame,InfPlayerMatchSuccess,ReqPlayerReady,ReqPlayerChangeSeat,ReqRemovePlayer,ReqPlayerMatch,OperationID,ReqPlayerLeaveTable} from "../proto/msg";
+import {CSProtoID,ReqPlayerCreateTeam,ReqPlayerJoinTeam,ReqPlayerStartGame,InfPlayerStartGame,ReqPlayerLogin,RspPlayerLogin,ReqPlayerGameData,InfPlayerGameData,ReqPlayerGlobalData,InfPlayerGlobalData,RspPlayerTeamAction,ReqPlayerLeaveTeam,InfPlayerTeamAction,ReqPlayerStepLock,PlayerOption,InfPlayerStepLock,InfPlayerMatch,ReqPing,RspPing,ReqPlayerToGatewayMgr,RspPlayerToGatewayMgr,ReqPlayerEndGame,InfPlayerEndGame,InfPlayerMatchSuccess,ReqPlayerReady,ReqPlayerChangeSeat,ReqRemovePlayer,ReqPlayerMatch,ReqPlayerLeaveTable} from "../proto/msg";
 import CoreConfig from "../CoreConfig";
 import {UserInfo} from "../sdk/wxgame/SdkObject";
 
@@ -159,14 +159,14 @@ export default class ServerHandler
         Core.NetMgr.sendBody(buff,CSProtoID.REQ_PLAYER_LEAVE_TEAM);
     }
 
-    /**准备或取消准备 */
-    public ChangeReady(readyType: OperationID): void
-    {
-        let req: ReqPlayerReady = ReqPlayerReady.create();
-        req.operation = readyType;
-        let buff: Uint8Array = ReqPlayerReady.encode(req).finish();
-        Core.NetMgr.sendBody(buff,CSProtoID.REQ_PLAYER_READY);
-    }
+    // /**准备或取消准备 */
+    // public ChangeReady(readyType: OperationID): void
+    // {
+    //     let req: ReqPlayerReady = ReqPlayerReady.create();
+    //     req.operation = readyType;
+    //     let buff: Uint8Array = ReqPlayerReady.encode(req).finish();
+    //     Core.NetMgr.sendBody(buff,CSProtoID.REQ_PLAYER_READY);
+    // }
 
     /**换位置 */
     public ChangeSeat(SeatId: number): void
@@ -229,22 +229,22 @@ export default class ServerHandler
     }
 
     // 匹配
-    public Match(iType: number): void
-    {
-        let req: ReqPlayerMatch = ReqPlayerMatch.create();
-        req.operation = OperationID.ENTRY_MATCH;
-        req.type = iType;
-        let buff: Uint8Array = ReqPlayerMatch.encode(req).finish();
-        Core.NetMgr.sendBody(buff,CSProtoID.REQ_PLAYER_MATCH);
-    }
-    public CancelMatch(iType: number): void
-    {
-        let req: ReqPlayerMatch = ReqPlayerMatch.create();
-        req.operation = OperationID.CANCEL_MATCH;
-        req.type = iType;
-        let buff: Uint8Array = ReqPlayerMatch.encode(req).finish();
-        Core.NetMgr.sendBody(buff,CSProtoID.REQ_PLAYER_MATCH);
-    }
+    // public Match(iType: number): void
+    // {
+    //     let req: ReqPlayerMatch = ReqPlayerMatch.create();
+    //     req.operation = OperationID.ENTRY_MATCH;
+    //     req.type = iType;
+    //     let buff: Uint8Array = ReqPlayerMatch.encode(req).finish();
+    //     Core.NetMgr.sendBody(buff,CSProtoID.REQ_PLAYER_MATCH);
+    // }
+    // public CancelMatch(iType: number): void
+    // {
+    //     let req: ReqPlayerMatch = ReqPlayerMatch.create();
+    //     req.operation = OperationID.CANCEL_MATCH;
+    //     req.type = iType;
+    //     let buff: Uint8Array = ReqPlayerMatch.encode(req).finish();
+    //     Core.NetMgr.sendBody(buff,CSProtoID.REQ_PLAYER_MATCH);
+    // }
     private OnInfPlayerMatch(msgHeader: MsgHeader): void
     {
         let body: Uint8Array = msgHeader.m_stBody;
