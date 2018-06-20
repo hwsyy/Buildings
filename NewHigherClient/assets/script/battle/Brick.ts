@@ -228,20 +228,14 @@ export class Brick
                         this.brickList[i].playPerfectEffect();
                     }
                 }
-                PlayerData.population += 4;
-                this.currentBrick.m_iPopulation = 4;
             }
             else if(state == BrickState.GOOD)
             {
                 this.brickAniList.push(this.currentBrick);
-                PlayerData.population += 2;
-                this.currentBrick.m_iPopulation = 2;
             }
             else if(state == BrickState.NORMAL)
             {
                 this.brickAniList.push(this.currentBrick);
-                PlayerData.population += 1;
-                this.currentBrick.m_iPopulation = 1;
             }
             if(this.brickList.length >= 3)
             {

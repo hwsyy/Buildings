@@ -4,6 +4,7 @@ import {BrickState} from "../common/GameEnum";
 import {ResStruct} from "../../corelibs/util/ResourcesMgr";
 import Core from "../../corelibs/Core";
 import {ResType} from "../../corelibs/CoreDefine";
+import {PlayerData} from "../common/PlayerData";
 
 /**
  * 砖块单元
@@ -46,15 +47,23 @@ export class BrickCell
     // 动画
     public m_bShouldFly: boolean = false;
     private m_bIsFlying: boolean = false;
-    private m_iFlyDuration: number = 130;
+    private m_iFlyDuration: number = 100;
     private m_iFlyTick: number = 0;
     private m_iDestroyTime: number = 110;
     private m_stPerson1: cc.Node = null;
     private m_stPerson2: cc.Node = null;
     private m_stPerson3: cc.Node = null;
     private m_stPerson4: cc.Node = null;
-    private m_iPerson3Changex: number = 0;
-    private m_iPerson3Changey: number = 0;
+    private m_iPerson1ChangeX: number = 0;
+    private m_iPerson1ChangeY: number = 0;
+    private m_iPerson2ChangeX: number = 0;
+    private m_iPerson2ChangeY: number = 0;
+    private m_iPerson3ChangeX: number = 0;
+    private m_iPerson3ChangeY: number = 0;
+    private m_iPerson4ChangeX: number = 0;
+    private m_iPerson4ChangeY: number = 0;
+
+    private shouldDestroy: number = 0;
 
     constructor(_id: number,_res: cc.Node,_perfectEffect: cc.Node)
     {
@@ -72,7 +81,8 @@ export class BrickCell
         this.parent = _parent;
         this.parent.addChild(this.res);
         //放在最前
-        this.res.setLocalZOrder(this.LOCAL_ZORDER);
+        this.res.setLocalZOrder(this.LOCAL_ZORDER - 2);
+
     }
 
     /**
@@ -95,60 +105,203 @@ export class BrickCell
     }
     public animateWithBrickPopulation(): void
     {
-        console.log("animateWithBrickPopulation");
-        if(this.m_bIsFlying == false)
+        if(this.m_bIsFlying == false)//创建动画资源
         {
-            let num = Math.floor(Math.random() * 10) % 2 + 1;
-            let path: string = "animation/person" + num + "/skeleton" + num;
-            if(this.id < 33)
-            {
-                Core.ResourcesMgr.LoadRes(ResStruct.CreateRes(path,ResType.Prefab),this.PopulationOnBoardAnimation1.bind(this));
-            }
-            else
-            {
-                Core.ResourcesMgr.LoadRes(ResStruct.CreateRes(path,ResType.Prefab),this.PopulationOnBoardAnimation1.bind(this));
-            }
-            this.m_bIsFlying = true;
+            this.CreateResource();
+            console.log(">>>>>>>>>>>>current population: ",this.m_iPopulation);
         }
-        else
+        else//帧动画
         {
-            let shouldDestroy: boolean = false;
-            if(this.m_stPerson3 != null)
+            this.m_iFlyTick += 1;
+
+            if(this.m_stPerson1 != null && this.m_stPerson1.isValid)
             {
-                this.m_iFlyTick += 1;
+                this.m_stPerson1.setScale(cc.p(-0.25 * this.m_iFlyTick / this.m_iFlyDuration,0.25 * this.m_iFlyTick / this.m_iFlyDuration));
+                this.m_stPerson1.position = cc.p(this.m_stPerson1.position.x - this.m_iPerson1ChangeX,this.m_stPerson1.position.y - this.m_iPerson1ChangeY);
+                this.m_iPerson1ChangeX = (this.m_stPerson1.position.x) / (this.m_iFlyDuration - this.m_iFlyTick);
+                this.m_iPerson1ChangeY = this.m_stPerson1.position.y / (this.m_iFlyDuration - this.m_iFlyTick);
+                if(this.m_iFlyTick >= this.m_iDestroyTime)
+                {
+                    this.m_stPerson1.active = false;
+                    this.shouldDestroy++;
+                    this.m_stPerson1.destroy();
+                }
+            }
+            if(this.m_stPerson2 != null && this.m_stPerson2.isValid)
+            {
+                this.m_stPerson2.setScale(cc.p(-0.25 * this.m_iFlyTick / this.m_iFlyDuration,0.25 * this.m_iFlyTick / this.m_iFlyDuration));
+                this.m_stPerson2.position = cc.p(this.m_stPerson2.position.x - this.m_iPerson2ChangeX,this.m_stPerson2.position.y - this.m_iPerson2ChangeY);
+                this.m_iPerson2ChangeX = (this.m_stPerson2.position.x) / (this.m_iFlyDuration - this.m_iFlyTick);
+                this.m_iPerson2ChangeY = this.m_stPerson2.position.y / (this.m_iFlyDuration - this.m_iFlyTick);
+                if(this.m_iFlyTick >= this.m_iDestroyTime)
+                {
+                    this.m_stPerson2.active = false;
+                    this.shouldDestroy++;
+                    this.m_stPerson2.destroy();
+                }
+            }
+            if(this.m_stPerson3 != null && this.m_stPerson3.isValid)
+            {
                 this.m_stPerson3.setScale(cc.p(-0.25 * this.m_iFlyTick / this.m_iFlyDuration,0.25 * this.m_iFlyTick / this.m_iFlyDuration));
+                this.m_stPerson3.position = cc.p(this.m_stPerson3.position.x - this.m_iPerson3ChangeX,this.m_stPerson3.position.y - this.m_iPerson3ChangeY);
+                this.m_iPerson3ChangeX = (this.m_stPerson3.position.x) / (this.m_iFlyDuration - this.m_iFlyTick);
+                this.m_iPerson3ChangeY = this.m_stPerson3.position.y / (this.m_iFlyDuration - this.m_iFlyTick);
                 if(this.m_iFlyTick >= this.m_iDestroyTime)
                 {
                     this.m_stPerson3.active = false;
-                    shouldDestroy = true;
-
+                    this.shouldDestroy++;
+                    this.m_stPerson3.destroy();
                 }
-                this.m_stPerson3.position = cc.p(this.m_stPerson3.position.x - this.m_iPerson3Changex,this.m_stPerson3.position.y - this.m_iPerson3Changey);
-                this.m_iPerson3Changex = (this.m_stPerson3.position.x) / (this.m_iFlyDuration - this.m_iFlyTick);
-                this.m_iPerson3Changey = this.m_stPerson3.position.y / (this.m_iFlyDuration - this.m_iFlyTick);
-                console.log(">>>>>>>>>>>>>>>>tick: ",this.m_iFlyTick,"postion: ",this.m_stPerson3.position,"change X: ",this.m_iPerson3Changex,"Y: ",this.m_iPerson3Changey);
             }
-            if(shouldDestroy == true && this.m_stPerson3 != null)
+            if(this.m_stPerson4 != null && this.m_stPerson4.isValid)
             {
-                this.m_stPerson3.destroy();
+                this.m_stPerson4.setScale(cc.p(-0.25 * this.m_iFlyTick / this.m_iFlyDuration,0.25 * this.m_iFlyTick / this.m_iFlyDuration));
+                this.m_stPerson4.position = cc.p(this.m_stPerson4.position.x - this.m_iPerson4ChangeX,this.m_stPerson4.position.y - this.m_iPerson3ChangeY);
+                this.m_iPerson4ChangeX = (this.m_stPerson4.position.x) / (this.m_iFlyDuration - this.m_iFlyTick);
+                this.m_iPerson3ChangeY = this.m_stPerson4.position.y / (this.m_iFlyDuration - this.m_iFlyTick);
+                if(this.m_iFlyTick >= this.m_iDestroyTime)
+                {
+                    this.m_stPerson4.active = false;
+                    this.shouldDestroy++;
+                    this.m_stPerson4.destroy();
+                }
+            }
+            if(this.shouldDestroy == this.m_iPopulation)//结束动画
+            {
                 this.m_bShouldFly = false;
+                // this.res.removeAllChildren();
             }
         }
     }
-
-    private PopulationOnBoardAnimation1(prefab)
+    private CreateResource()
     {
-        let dis1 = 100;
-        let dis2 = 150;
+        let num = Math.floor(Math.random() * 10) % 2 + 1;
+        let temArr: number[] = [1,2,3,4];
+        for(let i = 0;i < 4;i++)
+        {
+            let rndIndex = Math.floor((Math.random() * 10)) % temArr.length;
+            let tmp = temArr[i];
+            temArr[i] = temArr[rndIndex];
+            temArr[rndIndex] = tmp;
+        }
+        for(let i = 0;i < this.m_iPopulation;i++)
+        {
+            let func: Function = null;
+            if(temArr[i] == 1)
+            {
+                if(this.id < 33)
+                {
+                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/person" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect1.bind(this));
+                }
+                else
+                {
+                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/spaceman" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect1.bind(this));
+                }
+            } else if(temArr[i] == 2)
+            {
+                if(this.id < 33)
+                {
+                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/person" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect2.bind(this));
+                }
+                else
+                {
+                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/spaceman" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect2.bind(this));
+                }
+            }
+            else if(temArr[i] == 3)
+            {
+                if(this.id < 33)
+                {
+                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/person" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect3.bind(this));
+                }
+                else
+                {
+                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/spaceman" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect3.bind(this));
+                }
+            }
+            else if(temArr[i] == 4)
+            {
+                if(this.id < 33)
+                {
+                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/person" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect4.bind(this));
+                }
+                else
+                {
+                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/spaceman" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect4.bind(this));
+                }
+            }
+            console.log(">>>>>>>>>func: ",func,temArr[i]);
+
+        }
+
+        this.m_bIsFlying = true;
+    }
+    /**
+     *初始化小人（左上）
+     *
+     * @private
+     * @param {*} prefab
+     * @memberof BrickCell
+     */
+    private OnLoadEffect1(prefab)
+    {
+
+        let dis1 = -300;
+        let dis2 = 80;
+        this.m_stPerson1 = cc.instantiate(prefab);
+        this.m_stPerson1.setScale(cc.p(-0.25 / this.m_iFlyDuration,0.25 / this.m_iFlyDuration));
+        this.m_stPerson1.position = new cc.Vec2(dis1,dis2);
+        this.res.addChild(this.m_stPerson1);
+        this.m_stPerson1.rotationY = 180;
+    }
+    /**
+     *初始化小人（右上）
+     *
+     * @private
+     * @param {*} prefab
+     * @memberof BrickCell
+     */
+    private OnLoadEffect2(prefab)
+    {
+        let dis1 = 300;
+        let dis2 = 80;
+        this.m_stPerson2 = cc.instantiate(prefab);
+        this.m_stPerson2.setScale(cc.p(-0.25 / this.m_iFlyDuration,0.25 / this.m_iFlyDuration));
+        this.m_stPerson2.position = new cc.Vec2(dis1,dis2);
+        this.res.addChild(this.m_stPerson2);
+    }
+    /**
+     *初始化小人（左下）
+     *
+     * @private
+     * @param {*} prefab
+     * @memberof BrickCell
+     */
+    private OnLoadEffect3(prefab)
+    {
+        let dis1 = -300;
+        let dis2 = 20;
         this.m_stPerson3 = cc.instantiate(prefab);
         this.m_stPerson3.setScale(cc.p(-0.25 / this.m_iFlyDuration,0.25 / this.m_iFlyDuration));
-        this.m_stPerson3.position = new cc.Vec2(dis2,dis1);
+        this.m_stPerson3.position = new cc.Vec2(dis1,dis2);
         this.res.addChild(this.m_stPerson3);
-        console.log("person",this.m_stPerson3);
-
-        // this.m_iPerson3Changex = (this.m_stPerson3.position.x - this.res.x) / this.m_iFlyDuration;
-        // this.m_iPerson3Changey = (this.m_stPerson3.position.y - this.res.x) / this.m_iFlyDuration;
-        // console.log("创建一个ren3 " + this.m_iPerson3Changex + " " + this.m_iPerson3Changey);
+        this.m_stPerson1.rotationY = 180;
+    }
+    /**
+     *初始化小人（右下）
+     *
+     * @private
+     * @param {*} prefab
+     * @memberof BrickCell
+     */
+    private OnLoadEffect4(prefab)
+    {
+        let dis1 = 300;
+        let dis2 = 20;
+        this.m_stPerson4 = cc.instantiate(prefab);
+        this.m_stPerson4.setScale(cc.p(-0.25 / this.m_iFlyDuration,0.25 / this.m_iFlyDuration));
+        this.m_stPerson4.position = new cc.Vec2(dis1,dis2);
+        this.res.addChild(this.m_stPerson4);
     }
 
     /**
@@ -232,6 +385,8 @@ export class BrickCell
                 this.res.y = _endY;
                 this.originPosition = this.res.position;
                 this.m_bShouldFly = true;
+                PlayerData.population += 1;
+                this.m_iPopulation = 1;
                 _callBack(BrickState.NORMAL);
                 return;
             }
@@ -265,18 +420,24 @@ export class BrickCell
                 if(Math.abs(this.offset) <= ConfigData.PERFECT_OFFEST_X)
                 {
                     console.log("perfect!!");
+                    PlayerData.population += 4;
+                    this.m_iPopulation = 4;
                     this.state = BrickState.PERFECT;
                     _callBack(BrickState.PERFECT);//完美 结束回调
                 }
                 else if(Math.abs(this.offset) <= ConfigData.GOOD_OFFSET_X && Math.abs(this.offset) > ConfigData.PERFECT_OFFEST_X)
                 {
                     console.log("good!!");
+                    PlayerData.population += 2;
+                    this.m_iPopulation = 2;
                     this.state = BrickState.GOOD;
                     _callBack(BrickState.GOOD);
                 }
                 else if(Math.abs(this.offset) <= ConfigData.NORMAL_OFFSET_X && Math.abs(this.offset) > ConfigData.GOOD_OFFSET_X)
                 {
                     console.log("normal!!");
+                    PlayerData.population += 1;
+                    this.m_iPopulation = 1;
                     this.state = BrickState.NORMAL;
                     _callBack(BrickState.NORMAL);//结束回调
                 }
