@@ -62,8 +62,8 @@ export class BrickCell
     private m_iPerson3ChangeY: number = 0;
     private m_iPerson4ChangeX: number = 0;
     private m_iPerson4ChangeY: number = 0;
-
-    private shouldDestroy: number = 0;
+    /** 人口动画完成个数(各个小人动画完成时间可能不一致,等待全部完成后再标记动画完成) */
+    private animCompleteCnt: number = 0;
 
     constructor(_id: number,_res: cc.Node,_perfectEffect: cc.Node)
     {
@@ -81,8 +81,8 @@ export class BrickCell
         this.parent = _parent;
         this.parent.addChild(this.res);
         //放在最前
-        this.res.setLocalZOrder(this.LOCAL_ZORDER - 2);
-
+        this.res.setLocalZOrder(this.LOCAL_ZORDER);
+        this.res.setSiblingIndex(0);
     }
 
     /**
@@ -119,11 +119,18 @@ export class BrickCell
                 this.m_stPerson1.setScale(cc.p(-0.25 * this.m_iFlyTick / this.m_iFlyDuration,0.25 * this.m_iFlyTick / this.m_iFlyDuration));
                 this.m_stPerson1.position = cc.p(this.m_stPerson1.position.x - this.m_iPerson1ChangeX,this.m_stPerson1.position.y - this.m_iPerson1ChangeY);
                 this.m_iPerson1ChangeX = (this.m_stPerson1.position.x) / (this.m_iFlyDuration - this.m_iFlyTick);
-                this.m_iPerson1ChangeY = this.m_stPerson1.position.y / (this.m_iFlyDuration - this.m_iFlyTick);
+                if(Math.abs(this.m_stPerson1.position.x) < 1)
+                {
+                    this.m_iPerson1ChangeY = 0;
+                }
+                else
+                {
+                    this.m_iPerson1ChangeY = (this.m_stPerson1.position.y + 30) / (this.m_iFlyDuration - this.m_iFlyTick);
+                }
                 if(this.m_iFlyTick >= this.m_iDestroyTime)
                 {
                     this.m_stPerson1.active = false;
-                    this.shouldDestroy++;
+                    this.animCompleteCnt++;
                     this.m_stPerson1.destroy();
                 }
             }
@@ -132,11 +139,18 @@ export class BrickCell
                 this.m_stPerson2.setScale(cc.p(-0.25 * this.m_iFlyTick / this.m_iFlyDuration,0.25 * this.m_iFlyTick / this.m_iFlyDuration));
                 this.m_stPerson2.position = cc.p(this.m_stPerson2.position.x - this.m_iPerson2ChangeX,this.m_stPerson2.position.y - this.m_iPerson2ChangeY);
                 this.m_iPerson2ChangeX = (this.m_stPerson2.position.x) / (this.m_iFlyDuration - this.m_iFlyTick);
-                this.m_iPerson2ChangeY = this.m_stPerson2.position.y / (this.m_iFlyDuration - this.m_iFlyTick);
+                if(this.m_stPerson2.position.x < 5)
+                {
+                    this.m_iPerson2ChangeY = 0;
+                }
+                else
+                {
+                    this.m_iPerson2ChangeY = (this.m_stPerson2.position.y + 30) / (this.m_iFlyDuration - this.m_iFlyTick);
+                }
                 if(this.m_iFlyTick >= this.m_iDestroyTime)
                 {
                     this.m_stPerson2.active = false;
-                    this.shouldDestroy++;
+                    this.animCompleteCnt++;
                     this.m_stPerson2.destroy();
                 }
             }
@@ -145,11 +159,18 @@ export class BrickCell
                 this.m_stPerson3.setScale(cc.p(-0.25 * this.m_iFlyTick / this.m_iFlyDuration,0.25 * this.m_iFlyTick / this.m_iFlyDuration));
                 this.m_stPerson3.position = cc.p(this.m_stPerson3.position.x - this.m_iPerson3ChangeX,this.m_stPerson3.position.y - this.m_iPerson3ChangeY);
                 this.m_iPerson3ChangeX = (this.m_stPerson3.position.x) / (this.m_iFlyDuration - this.m_iFlyTick);
-                this.m_iPerson3ChangeY = this.m_stPerson3.position.y / (this.m_iFlyDuration - this.m_iFlyTick);
+                if(this.m_stPerson3.position.x < 2)
+                {
+                    this.m_iPerson3ChangeY = 0;
+                }
+                else
+                {
+                    this.m_iPerson3ChangeY = (this.m_stPerson3.position.y + 30) / (this.m_iFlyDuration - this.m_iFlyTick);
+                }
                 if(this.m_iFlyTick >= this.m_iDestroyTime)
                 {
                     this.m_stPerson3.active = false;
-                    this.shouldDestroy++;
+                    this.animCompleteCnt++;
                     this.m_stPerson3.destroy();
                 }
             }
@@ -158,21 +179,34 @@ export class BrickCell
                 this.m_stPerson4.setScale(cc.p(-0.25 * this.m_iFlyTick / this.m_iFlyDuration,0.25 * this.m_iFlyTick / this.m_iFlyDuration));
                 this.m_stPerson4.position = cc.p(this.m_stPerson4.position.x - this.m_iPerson4ChangeX,this.m_stPerson4.position.y - this.m_iPerson3ChangeY);
                 this.m_iPerson4ChangeX = (this.m_stPerson4.position.x) / (this.m_iFlyDuration - this.m_iFlyTick);
-                this.m_iPerson3ChangeY = this.m_stPerson4.position.y / (this.m_iFlyDuration - this.m_iFlyTick);
+                if(this.m_stPerson4.position.x < 5)
+                {
+                    this.m_iPerson4ChangeY = 0;
+                }
+                else
+                {
+                    this.m_iPerson4ChangeY = (this.m_stPerson4.position.y + 30) / (this.m_iFlyDuration - this.m_iFlyTick);
+                }
                 if(this.m_iFlyTick >= this.m_iDestroyTime)
                 {
                     this.m_stPerson4.active = false;
-                    this.shouldDestroy++;
+                    this.animCompleteCnt++;
                     this.m_stPerson4.destroy();
                 }
             }
-            if(this.shouldDestroy == this.m_iPopulation)//结束动画
+            if(this.animCompleteCnt == this.m_iPopulation)//结束动画
             {
                 this.m_bShouldFly = false;
                 // this.res.removeAllChildren();
             }
         }
     }
+    /**
+     *创建动画资源
+     *
+     * @private
+     * @memberof BrickCell
+     */
     private CreateResource()
     {
         let num = Math.floor(Math.random() * 10) % 2 + 1;
@@ -186,56 +220,40 @@ export class BrickCell
         }
         for(let i = 0;i < this.m_iPopulation;i++)
         {
-            let func: Function = null;
+            let fnc: Function = null;
             if(temArr[i] == 1)
             {
-                if(this.id < 33)
-                {
-                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/person" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect1.bind(this));
-                }
-                else
-                {
-                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/spaceman" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect1.bind(this));
-                }
-            } else if(temArr[i] == 2)
+                fnc = this.OnLoadEffect1;
+            }
+            else if(temArr[i] == 2)
             {
-                if(this.id < 33)
-                {
-                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/person" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect2.bind(this));
-                }
-                else
-                {
-                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/spaceman" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect2.bind(this));
-                }
+                fnc = this.OnLoadEffect2;
             }
             else if(temArr[i] == 3)
             {
-                if(this.id < 33)
-                {
-                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/person" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect3.bind(this));
-                }
-                else
-                {
-                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/spaceman" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect3.bind(this));
-                }
+                fnc = this.OnLoadEffect3;
             }
-            else if(temArr[i] == 4)
+            else 
             {
-                if(this.id < 33)
-                {
-                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/person" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect4.bind(this));
-                }
-                else
-                {
-                    Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/spaceman" + num + "/skeleton" + num,ResType.Prefab),this.OnLoadEffect4.bind(this));
-                }
+                fnc = this.OnLoadEffect4;
             }
-            console.log(">>>>>>>>>func: ",func,temArr[i]);
+
+            console.log(fnc);
+            if(this.id < 33)
+            {
+                Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/person" + num + "/skeleton" + num,ResType.Prefab),fnc.bind(this));
+            }
+            else
+            {
+                Core.ResourcesMgr.LoadRes(ResStruct.CreateRes("animation/spaceman" + num + "/skeleton" + num,ResType.Prefab),fnc.bind(this));
+            }
 
         }
 
         this.m_bIsFlying = true;
     }
+
+
     /**
      *初始化小人（左上）
      *
@@ -285,7 +303,7 @@ export class BrickCell
         this.m_stPerson3.setScale(cc.p(-0.25 / this.m_iFlyDuration,0.25 / this.m_iFlyDuration));
         this.m_stPerson3.position = new cc.Vec2(dis1,dis2);
         this.res.addChild(this.m_stPerson3);
-        this.m_stPerson1.rotationY = 180;
+        this.m_stPerson3.rotationY = 180;
     }
     /**
      *初始化小人（右下）

@@ -31,7 +31,6 @@ export default class HookMoveUnit
         this.host.m_iX = this.host.m_iX + this.host.m_stHookManager.m_iXChange;
         this.host.m_iY = this.host.m_iY + this.host.m_stHookManager.m_iYChange;
 
-        console.log("x: ",this.host.m_iX);
 
     };
 }

@@ -7,6 +7,7 @@ import {CameraRollType,GameEventType} from "../common/GameEnum";
 import {BrickState} from "../common/GameEnum";
 import {PlayerData} from "../common/PlayerData";
 import {ResType} from "../../corelibs/CoreDefine";
+import {PerfectMgr} from "../battle/PerfectMgr";
 
 /**
  * 砖块类
@@ -42,7 +43,8 @@ export class Brick
     private currentFallY: number;
     /**完美列表 */
     private perfectList: Array<BrickCell>;
-
+    /** 计时器 */
+    private perfectMgr: PerfectMgr;
 
 
     constructor()
@@ -172,8 +174,11 @@ export class Brick
      */
     public addBrick(_x: number,_y: number): void
     {
+        let last = this.brickList.length > 0 ? this.brickList[this.brickList.length - 1] : null;
+
         let index: number = Math.floor(Math.random() * this.brickResList.length);
         this.currentBrick = new BrickCell(this.brickList.length,cc.instantiate(this.brickResList[index]),this.perfectRes);
+        this.currentBrick.m_stLastBrick = last;
         this.currentBrick.init(BattleManager.getInstance().cameraCanvas);
         this.brickList.push(this.currentBrick);
         this.currentBrick.setPosition(_x,_y);
@@ -228,6 +233,7 @@ export class Brick
                         this.brickList[i].playPerfectEffect();
                     }
                 }
+                Core.AudioMgr.PlaySound("score");
             }
             else if(state == BrickState.GOOD)
             {
